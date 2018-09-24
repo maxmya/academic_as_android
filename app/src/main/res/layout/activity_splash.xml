@@ -7,11 +7,11 @@
     tools:context=".activities.SplashActivity">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/responseText"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="Hello Academic AS"
         android:textSize="30dp" />
 
 </RelativeLayout>

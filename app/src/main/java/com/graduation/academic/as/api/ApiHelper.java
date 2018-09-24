@@ -13,7 +13,7 @@ public class ApiHelper {
     private static Retrofit retrofit;
 
     // our backend base url without any end point
-    private static String baseUrl;
+    private static String baseUrl = "https://reqres.in";
 
     // get a built instance of retrofit for use
     public static Retrofit getClient() {
@@ -23,11 +23,11 @@ public class ApiHelper {
          */
 
         // get base url from resource file
-        baseUrl = App.getInstance().getApplicationContext().getString(R.string.base_url);
+      //  baseUrl = App.getInstance().getApplicationContext().getString(R.string.base_url);
 
         // build retrofit client
         retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create()) // for ease use of json parsing 
+                .addConverterFactory(GsonConverterFactory.create()) // for ease use of json parsing
                 .baseUrl(baseUrl)
                 .build();
         return retrofit;
