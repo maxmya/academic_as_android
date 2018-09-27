@@ -19,8 +19,11 @@ public class ApiHelper {
     public static Retrofit getClient() {
 
          /*
-        do logic here ( add common headers and auth stuff )
+
+            do logic here ( add common headers and auth stuff )
+
          */
+
 
         // get base url from resource file
       //  baseUrl = App.getInstance().getApplicationContext().getString(R.string.base_url);
