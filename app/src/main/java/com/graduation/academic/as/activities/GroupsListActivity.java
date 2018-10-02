@@ -17,7 +17,6 @@ import com.graduation.academic.as.adapters.GroupListAdapter;
 import com.graduation.academic.as.models.Group;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
 
 public class GroupsListActivity extends AppCompatActivity {

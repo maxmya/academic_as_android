@@ -13,13 +13,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.graduation.academic.as.R;
-import com.graduation.academic.as.adapters.GroupListAdapter;
 import com.graduation.academic.as.adapters.PostListAdapter;
-import com.graduation.academic.as.models.Group;
 import com.graduation.academic.as.models.Post;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class GroupActivity extends AppCompatActivity {
 

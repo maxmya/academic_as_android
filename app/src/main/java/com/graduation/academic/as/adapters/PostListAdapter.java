@@ -23,6 +23,7 @@ import com.graduation.academic.as.viewholders.PostsListViewHolder;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
 
@@ -52,24 +53,36 @@ public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
             @Override
             public void onClick(View view) {
                 try {
-                    int likes = Integer.parseInt(posts.get(i).getLikes());
-                    posts.get(i).setLikes((likes + 1) + "");
-                    postsListViewHolder.likes.setText(posts.get(i).getLikes());
-                    final FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    final DocumentReference ref = db.collection("/groups/" + groupId + "/posts/").document(postId);
-                    ref.set(posts.get(i)).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Log.i("Adapter ", task.isSuccessful() + " at " + ref.getPath());
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.i("Adapter ", e.getMessage() + "");
+//                    int likes = Integer.parseInt(posts.get(i).getLikes());
+//                    posts.get(i).setLikes((likes + 1) + "");
+//                    postsListViewHolder.likes.setText(posts.get(i).getLikes());
+//                    final FirebaseFirestore db = FirebaseFirestore.getInstance();
+//                    final DocumentReference ref = db.collection("/groups/" + groupId + "/posts/").document(postId);
+//                    ref.set(posts.get(i)).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> task) {
+//                            Log.i("Adapter ", task.isSuccessful() + " at " + ref.getPath());
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            Log.i("Adapter ", e.getMessage() + "");
+//
+//                            e.printStackTrace();
+//                        }
+//                    });
 
-                            e.printStackTrace();
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    db.collection("/groups/" + groupId + "/posts/").document(postId)
+                            .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            Map<String, String> likers = (Map<String, String>) documentSnapshot.get("likers");
+                            String likes = (String) documentSnapshot.get("likes");
+                            // todo get uid and check if he's a liker !
                         }
                     });
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
