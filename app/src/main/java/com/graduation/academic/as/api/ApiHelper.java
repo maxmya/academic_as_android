@@ -13,7 +13,7 @@ public class ApiHelper {
     private static Retrofit retrofit;
 
     // our backend base url without any end point
-    private static String baseUrl;
+    private static String baseUrl ;
 
     // get a built instance of retrofit for use
     public static Retrofit getClient() {

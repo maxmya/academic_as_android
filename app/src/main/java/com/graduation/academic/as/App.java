@@ -1,5 +1,8 @@
 package com.graduation.academic.as;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
@@ -21,5 +24,12 @@ public class App extends MultiDexApplication {
         return mInstance;
     }
 
+    public static <T> T openActivityWithoutAnimation(final Class<T> wantedActivity, Context currentContext) {
+        Intent intent = new Intent(currentContext, wantedActivity);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        currentContext.startActivity(intent);
+        ((Activity) currentContext).finish();
+        return null;
+    }
 
 }

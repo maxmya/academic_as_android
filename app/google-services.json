@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "739357717059",
+    "firebase_url": "https://academic-as.firebaseio.com",
+    "project_id": "academic-as",
+    "storage_bucket": "academic-as.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739357717059:android:c851ee883f9d239b",
+        "android_client_info": {
+          "package_name": "com.graduation.academic.as"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "739357717059-q2p52mqbj41lmutrra4fgeddvbe123ar.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.graduation.academic.as",
+            "certificate_hash": "5fb9b2c893c88dafd9caf6c6ef80b8f3171111ec"
+          }
+        },
+        {
+          "client_id": "739357717059-knlde31nlorvr3ffj1ue7rroseoogb26.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxBGTB8Sb9oJgWJYZ4EfVKy-3XM38t964"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "739357717059-knlde31nlorvr3ffj1ue7rroseoogb26.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

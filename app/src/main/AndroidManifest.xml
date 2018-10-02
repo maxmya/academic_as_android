@@ -17,6 +17,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.Home"
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.GroupsListActivity" />
+        <activity android:name=".activities.GroupActivity"></activity>
     </application>
 
 </manifest>
