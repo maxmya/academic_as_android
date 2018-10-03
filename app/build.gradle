@@ -8,7 +8,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.graduation.academic.as"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -24,27 +24,36 @@ android {
 
 dependencies {
     // android added
-    api fileTree(dir: 'libs', include: ['*.jar'])
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //noinspection GradleCompatible
-    api 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
 
     // our dependencies //
     // multi dex support
-    api 'com.android.support:multidex:1.0.3'
-    //retrofit for apis
-    api 'com.squareup.retrofit2:retrofit:2.4.0'
-    api 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.android.support:multidex:1.0.3'
+    //retrofit for implementations
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     // picasso for image loading
-    api 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
-    api 'com.android.support.constraint:constraint-layout:1.1.3'
-    api 'com.android.support:support-v4:28.0.0'
-    api 'com.android.support:design:28.0.0'
+    // ui for edit text
+    implementation 'com.github.florent37:materialtextfield:1.0.7'
+
+    implementation 'com.google.firebase:firebase-auth:16.0.4'
+    // ui
+    implementation 'com.github.StevenDXC:DxLoadingButton:2.1'
+    implementation 'com.github.varunest:sparkbutton:1.0.6'
+
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
     // firestore dependency
-    api 'com.google.firebase:firebase-firestore:11.8.0'
+    implementation 'com.google.firebase:firebase-firestore:17.1.1'
+    implementation 'com.google.firebase:firebase-core:16.0.4'
 
-    api 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 
 }
 

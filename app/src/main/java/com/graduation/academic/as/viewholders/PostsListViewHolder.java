@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.graduation.academic.as.R;
+import com.varunest.sparkbutton.SparkButton;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -17,7 +18,7 @@ public class PostsListViewHolder extends RecyclerView.ViewHolder {
     public TextView userName;
     public CircleImageView profilePicture;
     public TextView likes;
-    public ImageButton likeUp;
+    public SparkButton likeUp;
 
     public PostsListViewHolder(@NonNull View itemView) {
         super(itemView);

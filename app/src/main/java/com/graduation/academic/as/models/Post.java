@@ -1,5 +1,7 @@
 package com.graduation.academic.as.models;
 
+import com.google.firebase.Timestamp;
+
 import java.util.Map;
 
 public class Post {
@@ -10,6 +12,24 @@ public class Post {
     private String ppURL;
     private String likes;
     private String groupId;
+    private Map<String, String> likers;
+    private long timestamp;
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setLikers(Map<String, String> likers) {
+        this.likers = likers;
+    }
+
+    public Map<String, String> getLikers() {
+        return likers;
+    }
 
     public String getLikes() {
         return likes;

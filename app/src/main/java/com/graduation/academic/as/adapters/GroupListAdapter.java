@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.graduation.academic.as.R;
 import com.graduation.academic.as.activities.GroupActivity;
 import com.graduation.academic.as.models.Group;
 import com.graduation.academic.as.viewholders.GroupListViewHolder;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -19,6 +21,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListViewHolder> 
 
 
     ArrayList<Group> groups;
+    private static final String TAG = GroupListAdapter.class.getSimpleName();
 
     public GroupListAdapter(ArrayList<Group> groups) {
         this.groups = groups;
@@ -34,7 +37,9 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull final GroupListViewHolder groupListViewHolder, int i) {
-        groupListViewHolder.groupName.append(groups.get(i).getGroupName());
+        groupListViewHolder.groupName.setText(groups.get(i).getGroupName());
+        Picasso.get().load(groups.get(i).getGroupImage())
+                .placeholder(R.drawable.group_placeholder).into(groupListViewHolder.groupImage);
         final Context context = groupListViewHolder.open.getContext().getApplicationContext();
         final int groupPosition = i;
         groupListViewHolder.open.setOnClickListener(new View.OnClickListener() {

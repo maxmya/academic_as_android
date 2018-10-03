@@ -1,16 +1,20 @@
 package com.graduation.academic.as.adapters;
 
+import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -21,9 +25,12 @@ import com.graduation.academic.as.models.Post;
 import com.graduation.academic.as.viewholders.GroupListViewHolder;
 import com.graduation.academic.as.viewholders.PostsListViewHolder;
 import com.squareup.picasso.Picasso;
+import com.varunest.sparkbutton.SparkEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
 
@@ -53,42 +60,56 @@ public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
             @Override
             public void onClick(View view) {
                 try {
-//                    int likes = Integer.parseInt(posts.get(i).getLikes());
-//                    posts.get(i).setLikes((likes + 1) + "");
-//                    postsListViewHolder.likes.setText(posts.get(i).getLikes());
-//                    final FirebaseFirestore db = FirebaseFirestore.getInstance();
-//                    final DocumentReference ref = db.collection("/groups/" + groupId + "/posts/").document(postId);
-//                    ref.set(posts.get(i)).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<Void> task) {
-//                            Log.i("Adapter ", task.isSuccessful() + " at " + ref.getPath());
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Log.i("Adapter ", e.getMessage() + "");
-//
-//                            e.printStackTrace();
-//                        }
-//                    });
-
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("/groups/" + groupId + "/posts/").document(postId)
-                            .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            Map<String, String> likers = (Map<String, String>) documentSnapshot.get("likers");
-                            String likes = (String) documentSnapshot.get("likes");
-                            // todo get uid and check if he's a liker !
-                        }
-                    });
-
+                    final MediaPlayer mp = MediaPlayer.create(postsListViewHolder.likeUp.getContext(), R.raw.pop);
+                    mp.start();
+                    postsListViewHolder.likeUp.playAnimation();
+                    handleLikes(postsListViewHolder, groupId, postId, i);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
         Picasso.get().load(posts.get(i).getPpURL()).into(postsListViewHolder.profilePicture);
+    }
+
+    private void handleLikes(final PostsListViewHolder postsListViewHolder, final String groupId, final String postId, final int i) {
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("/groups/" + groupId + "/posts/").document(postId)
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                if (documentSnapshot.contains("likers")) {
+                    Map<String, String> likers = (Map<String, String>) documentSnapshot.get("likers");
+                    String likes = (String) documentSnapshot.get("likes");
+                    if (likers.containsKey(uid)) {
+                        // delete like
+                        likers.remove(uid);
+                        likes = (Integer.parseInt(likes) - 1) + "";
+                        posts.get(i).setLikes(likes);
+                        posts.get(i).setLikers(likers);
+                        postsListViewHolder.likes.setText(likes);
+                        db.collection("/groups/" + groupId + "/posts/").document(postId).set(posts.get(i));
+                    } else {
+                        // do like
+                        likers.put(uid, "1");
+                        likes = (Integer.parseInt(likes) + 1) + "";
+                        posts.get(i).setLikes(likes);
+                        posts.get(i).setLikers(likers);
+                        postsListViewHolder.likes.setText(likes);
+                        db.collection("/groups/" + groupId + "/posts/").document(postId).set(posts.get(i));
+                    }
+                } else {
+                    Map<String, String> likers = new HashMap<>();
+                    likers.put(uid, "1");
+                    String likes = "1";
+                    posts.get(i).setLikes(likes);
+                    posts.get(i).setLikers(likers);
+                    postsListViewHolder.likes.setText(likes);
+                    db.collection("/groups/" + groupId + "/posts/").document(postId).set(posts.get(i));
+                }
+            }
+        });
     }
 
     @Override

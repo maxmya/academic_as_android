@@ -22,7 +22,8 @@
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />
         <activity android:name=".activities.GroupsListActivity" />
-        <activity android:name=".activities.GroupActivity"></activity>
+        <activity android:name=".activities.GroupActivity" />
+        <activity android:name=".activities.LoginActivity"></activity>
     </application>
 
 </manifest>

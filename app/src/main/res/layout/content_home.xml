@@ -9,18 +9,5 @@
     tools:context=".activities.Home"
     tools:showIn="@layout/app_bar_home">
 
-    <EditText
-        android:id="@+id/fname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
-    <EditText
-        android:id="@+id/lname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/submit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 </LinearLayout>

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import com.graduation.academic.as.App;
 import com.graduation.academic.as.R;
 import com.graduation.academic.as.api.Api;
-import com.graduation.academic.as.api.ApiHelper;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -24,7 +23,10 @@ public class SplashActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                App.openActivityWithoutAnimation(GroupsListActivity.class, SplashActivity.this);
+                if (App.isLoggedIn())
+                    App.openActivityWithFadeAnim(Home.class, SplashActivity.this, true);
+                else
+                    App.openActivityWithFadeAnim(LoginActivity.class, SplashActivity.this, true);
             }
         }, 5000);
 

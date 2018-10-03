@@ -5,8 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import com.dx.dxloadingbutton.lib.LoadingButton;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -19,7 +25,9 @@ import com.graduation.academic.as.models.Group;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class GroupsListActivity extends AppCompatActivity {
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class GroupsListActivity extends AppCompatActivity  {
 
     private static final String TAG = GroupsListActivity.class.getSimpleName();
 
@@ -27,13 +35,12 @@ public class GroupsListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups_list);
-
         initList();
     }
 
 
     private void initList() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("groups").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
@@ -42,6 +49,7 @@ public class GroupsListActivity extends AppCompatActivity {
                     Group currentGroup = new Group();
                     currentGroup.setGroupId(doc.getId());
                     currentGroup.setGroupName(((Map<String, String>) doc.get("metadata")).get("name"));
+                    currentGroup.setGroupImage(((Map<String, String>) doc.get("metadata")).get("groupImage"));
                     groups.add(currentGroup);
                 }
                 RecyclerView recyclerView = (RecyclerView) findViewById(R.id.group_list);
@@ -58,5 +66,6 @@ public class GroupsListActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }

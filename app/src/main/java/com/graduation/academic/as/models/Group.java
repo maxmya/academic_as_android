@@ -4,6 +4,15 @@ public class Group {
 
     private String groupName;
     private String groupId;
+    private String groupImage;
+
+    public String getGroupImage() {
+        return groupImage;
+    }
+
+    public void setGroupImage(String groupImage) {
+        this.groupImage = groupImage;
+    }
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
