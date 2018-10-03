@@ -56,7 +56,7 @@ public class GroupsListActivity extends AppCompatActivity  {
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
                 recyclerView.removeAllViews();
                 recyclerView.setLayoutManager(layoutManager);
-                recyclerView.setAdapter(new GroupListAdapter(groups));
+                recyclerView.setAdapter(new GroupListAdapter(groups,GroupsListActivity.this));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

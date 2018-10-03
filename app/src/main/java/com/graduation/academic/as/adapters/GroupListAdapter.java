@@ -22,8 +22,10 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListViewHolder> 
 
     ArrayList<Group> groups;
     private static final String TAG = GroupListAdapter.class.getSimpleName();
+    Context mContext;
 
-    public GroupListAdapter(ArrayList<Group> groups) {
+    public GroupListAdapter(ArrayList<Group> groups, Context mContext) {
+        this.mContext = mContext;
         this.groups = groups;
     }
 
@@ -47,7 +49,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListViewHolder> 
             public void onClick(View view) {
                 Intent groupActivity = new Intent(context, GroupActivity.class);
                 groupActivity.putExtra("group_id", groups.get(groupPosition).getGroupId());
-                context.startActivity(groupActivity);
+                mContext.startActivity(groupActivity);
             }
         });
     }
