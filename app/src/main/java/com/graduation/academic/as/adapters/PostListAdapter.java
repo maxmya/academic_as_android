@@ -27,7 +27,11 @@ import com.graduation.academic.as.viewholders.PostsListViewHolder;
 import com.squareup.picasso.Picasso;
 import com.varunest.sparkbutton.SparkEventListener;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -51,9 +55,11 @@ public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final PostsListViewHolder postsListViewHolder, final int i) {
-        postsListViewHolder.body.append(posts.get(i).getBody());
+        postsListViewHolder.body.setText(posts.get(i).getBody());
         postsListViewHolder.userName.setText(posts.get(i).getOwner());
+        // Todo :load name and image url from users node
         postsListViewHolder.likes.setText(posts.get(i).getLikes());
+        postsListViewHolder.time.setText(DateFormat.getInstance().format(posts.get(i).getTimestamp()));
         final String groupId = posts.get(i).getGroupId();
         final String postId = posts.get(i).getPostId();
         postsListViewHolder.likeUp.setOnClickListener(new View.OnClickListener() {

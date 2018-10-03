@@ -19,6 +19,8 @@ public class PostsListViewHolder extends RecyclerView.ViewHolder {
     public CircleImageView profilePicture;
     public TextView likes;
     public SparkButton likeUp;
+    public TextView time;
+
 
     public PostsListViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -27,5 +29,6 @@ public class PostsListViewHolder extends RecyclerView.ViewHolder {
         profilePicture = itemView.findViewById(R.id.user_pp);
         likes = itemView.findViewById(R.id.likes);
         likeUp = itemView.findViewById(R.id.like_up);
+        time = itemView.findViewById(R.id.time);
     }
 }
