@@ -7,7 +7,7 @@
 
         <item
             android:id="@+id/groups"
-            android:icon="@drawable/like_24dp"
+            android:icon="@drawable/groups_icon"
             android:title="Groups" />
 
     </group>
@@ -16,7 +16,7 @@
         <menu>
             <item
                 android:id="@+id/log_out"
-                android:icon="@drawable/ic_lock_outline_24dp"
+                android:icon="@drawable/logout"
                 android:title="Sign Out" />
 
         </menu>

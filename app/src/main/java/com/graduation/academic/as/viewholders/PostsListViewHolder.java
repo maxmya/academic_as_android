@@ -1,12 +1,12 @@
 package com.graduation.academic.as.viewholders;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.devs.readmoreoption.ReadMoreOption;
 import com.graduation.academic.as.R;
 import com.varunest.sparkbutton.SparkButton;
 
@@ -15,12 +15,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class PostsListViewHolder extends RecyclerView.ViewHolder {
 
     public TextView body;
+
     public TextView userName;
     public CircleImageView profilePicture;
     public TextView likes;
     public SparkButton likeUp;
     public TextView time;
-
+    public ReadMoreOption readMoreOption;
 
     public PostsListViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -30,5 +31,13 @@ public class PostsListViewHolder extends RecyclerView.ViewHolder {
         likes = itemView.findViewById(R.id.likes);
         likeUp = itemView.findViewById(R.id.like_up);
         time = itemView.findViewById(R.id.time);
+        readMoreOption = new ReadMoreOption.Builder(itemView.getContext())
+                .textLength(3, ReadMoreOption.TYPE_LINE)
+                .moreLabel("see more")
+                .lessLabel("see less")
+                .moreLabelColor(Color.RED)
+                .lessLabelColor(Color.BLUE)
+                .labelUnderLine(true)
+                .build();
     }
 }

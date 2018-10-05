@@ -8,6 +8,8 @@ import android.preference.PreferenceManager;
 import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
+import com.graduation.academic.as.handlers.ExceptionHandler;
+
 public class App extends MultiDexApplication {
 
     private static final String TAG = App.class.getSimpleName();
@@ -25,8 +27,6 @@ public class App extends MultiDexApplication {
         super.onCreate();
         mInstance = this;
         sPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        Toast.makeText(this, TAG + " Initialized", Toast.LENGTH_SHORT).show();
     }
 
     public static App getInstance() {

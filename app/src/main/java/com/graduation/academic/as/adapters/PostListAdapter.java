@@ -55,9 +55,9 @@ public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final PostsListViewHolder postsListViewHolder, final int i) {
+        postsListViewHolder.readMoreOption.addReadMoreTo(postsListViewHolder.body, posts.get(i).getBody());
         postsListViewHolder.body.setText(posts.get(i).getBody());
         postsListViewHolder.userName.setText(posts.get(i).getOwner());
-        // Todo :load name and image url from users node
         postsListViewHolder.likes.setText(posts.get(i).getLikes());
         postsListViewHolder.time.setText(DateFormat.getInstance().format(posts.get(i).getTimestamp()));
         final String groupId = posts.get(i).getGroupId();
@@ -75,6 +75,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
                 }
             }
         });
+
         Picasso.get().load(posts.get(i).getPpURL()).into(postsListViewHolder.profilePicture);
     }
 

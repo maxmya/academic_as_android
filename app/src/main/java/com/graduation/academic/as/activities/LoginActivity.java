@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void firebaseLoginTask() {
         String email = this.email.getText().toString();
         String password = this.password.getText().toString();
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email+"@academic.com", password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {

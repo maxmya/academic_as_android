@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.graduation.academic.as.App;
 import com.graduation.academic.as.R;
 import com.graduation.academic.as.api.Api;
+import com.graduation.academic.as.handlers.ExceptionHandler;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -19,6 +20,10 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         //api = ApiHelper.getClient().create(Api.class);
+
+        // set ExceptionHandler
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+        
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

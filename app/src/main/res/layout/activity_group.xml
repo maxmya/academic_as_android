@@ -9,6 +9,49 @@
     tools:context=".activities.GroupActivity">
 
     <net.cachapa.expandablelayout.ExpandableLayout
+        android:id="@+id/appbar_expandable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:el_duration="200"
+        app:el_expanded="true"
+        app:el_parallax="0.5">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/my_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:background="@color/colorPrimaryDark" />
+
+                <TextView
+                    android:id="@+id/group_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center"
+                    android:layout_marginLeft="50dp"
+                    android:textColor="@color/light_font"
+                    android:textSize="20dp" />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="right|center"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/support" />
+
+            </FrameLayout>
+        </android.support.design.widget.AppBarLayout>
+    </net.cachapa.expandablelayout.ExpandableLayout>
+
+    <net.cachapa.expandablelayout.ExpandableLayout
         android:id="@+id/expandable_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -80,8 +123,44 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            app:indicatorColor="@color/colorAccent"
+            app:indicatorName="BallTrianglePathIndicator" />
+
+        <LinearLayout
+            android:id="@+id/error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="50dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:src="@drawable/sad" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Something Went Wrong"
+                android:textAlignment="center"
+                android:textColor="@color/light_font"
+                android:textSize="20dp" />
+
+        </LinearLayout>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/posts_list"
+            android:paddingBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -89,11 +168,11 @@
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/floating_post"
-            android:src="@drawable/post"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
-            android:layout_margin="10dp" />
+            android:layout_margin="10dp"
+            android:src="@drawable/blog" />
 
     </FrameLayout>
 

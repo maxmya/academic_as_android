@@ -15,8 +15,9 @@
 
         <com.transferwise.sequencelayout.SequenceLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="20dp">
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp">
 
             <com.transferwise.sequencelayout.SequenceStep
                 android:layout_width="match_parent"
@@ -137,5 +138,9 @@
                 app:anchor="2 Dec"
                 app:title="Fifth step" />
         </com.transferwise.sequencelayout.SequenceLayout>
+
+
     </ScrollView>
+
+
 </LinearLayout>
