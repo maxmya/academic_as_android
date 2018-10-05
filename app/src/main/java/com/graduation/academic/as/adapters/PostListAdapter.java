@@ -1,15 +1,25 @@
 package com.graduation.academic.as.adapters;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.ceylonlabs.imageviewpopup.ImagePopup;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,13 +30,20 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.graduation.academic.as.App;
 import com.graduation.academic.as.R;
+import com.graduation.academic.as.helpers.BasicImageDownloader;
 import com.graduation.academic.as.models.Post;
 import com.graduation.academic.as.viewholders.GroupListViewHolder;
 import com.graduation.academic.as.viewholders.PostsListViewHolder;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.varunest.sparkbutton.SparkEventListener;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,14 +52,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
 
 
     ArrayList<Post> posts;
+    Context mContext;
 
-    public PostListAdapter(ArrayList<Post> posts) {
+    public PostListAdapter(ArrayList<Post> posts, Context mContext) {
         this.posts = posts;
+        this.mContext = mContext;
     }
 
     @NonNull
@@ -75,9 +95,93 @@ public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
                 }
             }
         });
+        if (posts.get(i).getPostImage() != null) {
+            postsListViewHolder.postImage.setVisibility(View.VISIBLE);
+            Picasso.get().load(posts.get(i).getPostImage()).into(postsListViewHolder.postImage);
+            final ImagePopup imagePopup = new ImagePopup(postsListViewHolder.postImage.getContext());
+            imagePopup.setBackgroundColor(Color.BLACK);
+            imagePopup.setFullScreen(true);
+            imagePopup.initiatePopupWithGlide(posts.get(i).getPostImage());
+            postsListViewHolder.postImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    imagePopup.viewPopup();
+                }
+            });
+            postsListViewHolder.postImage.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
+                    builder.setTitle("Save");
+                    builder.setMessage("Do you want to save image?");
+
+                    builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            final Bitmap.CompressFormat mFormat = Bitmap.CompressFormat.JPEG;
+                            String name = UUID.randomUUID().toString();
+                            final File myImageFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
+                                    File.separator + "image_test" + File.separator + name + "." + mFormat.name().toLowerCase());
+
+                            BasicImageDownloader downloader = new BasicImageDownloader(new BasicImageDownloader.OnImageLoaderListener() {
+                                @Override
+                                public void onError(BasicImageDownloader.ImageError error) {
+                                    Toast.makeText(mContext, error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                }
+
+                                @Override
+                                public void onProgressChange(int percent) {
+                                    Toast.makeText(mContext, percent + "%", Toast.LENGTH_SHORT).show();
+
+                                }
+
+
+                                @Override
+                                public void onComplete(Bitmap result) {
+                                    BasicImageDownloader.writeToDisk(myImageFile, result, new BasicImageDownloader.OnBitmapSaveListener() {
+                                        @Override
+                                        public void onBitmapSaved() {
+                                            Toast.makeText(mContext, "Saved !", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onBitmapSaveError(BasicImageDownloader.ImageError error) {
+
+                                        }
+                                    }, Bitmap.CompressFormat.JPEG, false);
+
+                                }
+                            });
+                            downloader.download(posts.get(i).getPostImage(), true);
+
+                            dialog.dismiss();
+                        }
+                    });
+
+                    builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            // Do nothing
+                            dialog.dismiss();
+                        }
+                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    return false;
+                }
+            });
+        } else {
+            postsListViewHolder.postImage.setVisibility(View.GONE);
+        }
         Picasso.get().load(posts.get(i).getPpURL()).into(postsListViewHolder.profilePicture);
     }
+
 
     private void handleLikes(final PostsListViewHolder postsListViewHolder, final String groupId, final String postId, final int i) {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();

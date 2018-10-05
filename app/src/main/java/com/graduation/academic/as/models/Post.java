@@ -12,8 +12,17 @@ public class Post {
     private String ppURL;
     private String likes;
     private String groupId;
+    private String postImage;
     private Map<String, String> likers;
     private long timestamp;
+
+    public String getPostImage() {
+        return postImage;
+    }
+
+    public void setPostImage(String postImage) {
+        this.postImage = postImage;
+    }
 
     public long getTimestamp() {
         return timestamp;

@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.devs.readmoreoption.ReadMoreOption;
@@ -22,6 +23,7 @@ public class PostsListViewHolder extends RecyclerView.ViewHolder {
     public SparkButton likeUp;
     public TextView time;
     public ReadMoreOption readMoreOption;
+    public ImageView postImage;
 
     public PostsListViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -31,6 +33,7 @@ public class PostsListViewHolder extends RecyclerView.ViewHolder {
         likes = itemView.findViewById(R.id.likes);
         likeUp = itemView.findViewById(R.id.like_up);
         time = itemView.findViewById(R.id.time);
+        postImage = itemView.findViewById(R.id.post_image_item);
         readMoreOption = new ReadMoreOption.Builder(itemView.getContext())
                 .textLength(3, ReadMoreOption.TYPE_LINE)
                 .moreLabel("see more")
