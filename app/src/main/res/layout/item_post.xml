@@ -117,7 +117,37 @@
                     android:textColor="@color/colorAccent"
                     android:textSize="10dp"
                     android:textStyle="bold" />
+
             </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.varunest.sparkbutton.SparkButton
+                    android:id="@+id/comment"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:sparkbutton_activeImage="@drawable/comment"
+                    app:sparkbutton_iconSize="35dp"
+                    app:sparkbutton_inActiveImage="@drawable/comment"
+                    app:sparkbutton_primaryColor="@color/colorAccent"
+                    app:sparkbutton_secondaryColor="@color/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/comment_counter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginRight="25dp"
+                    android:text="15"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="10dp"
+                    android:textStyle="bold" />
+
+            </FrameLayout>
+
         </LinearLayout>
     </FrameLayout>
 

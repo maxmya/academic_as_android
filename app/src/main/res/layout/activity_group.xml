@@ -89,11 +89,11 @@
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/floating_post"
-            android:src="@drawable/post"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
-            android:layout_margin="10dp" />
+            android:layout_margin="10dp"
+            android:src="@drawable/post" />
 
     </FrameLayout>
 

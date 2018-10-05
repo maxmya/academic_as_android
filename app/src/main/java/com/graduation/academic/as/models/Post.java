@@ -11,8 +11,10 @@ public class Post {
     private String body;
     private String ppURL;
     private String likes;
+    private String comments;
     private String groupId;
     private Map<String, String> likers;
+    private Map<String, String> commenters;
     private long timestamp;
 
     public long getTimestamp() {
@@ -77,5 +79,21 @@ public class Post {
 
     public void setPostId(String postId) {
         this.postId = postId;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public Map<String, String> getCommenters() {
+        return commenters;
+    }
+
+    public void setCommenters(Map<String, String> commenters) {
+        this.commenters = commenters;
     }
 }
