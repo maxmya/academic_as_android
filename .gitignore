@@ -8,5 +8,5 @@
 /build
 /captures
 .externalNativeBuild
-
+/chat21/build
 \.idea/caches/
