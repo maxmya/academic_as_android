@@ -87,6 +87,7 @@ public class Home extends AppCompatActivity
     }
 
     void setupChatContact(String uid, String fname, String email, String lname, String ppurl) {
+        App.initChat(this);
         IChatUser iChatUser = new ChatUser();
         iChatUser.setEmail("");
         iChatUser.setId(uid);

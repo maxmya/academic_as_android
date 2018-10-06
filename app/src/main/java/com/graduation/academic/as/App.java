@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.graduation.academic.as.handlers.ExceptionHandler;
 import com.graduation.academic.as.models.User;
 
@@ -42,6 +43,7 @@ public class App extends MultiDexApplication {
         super.onCreate();
         mInstance = this;
         sPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
     public static App getInstance() {
