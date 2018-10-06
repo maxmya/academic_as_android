@@ -1,7 +1,9 @@
 package org.chat21.android.ui.messages.adapters;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -12,15 +14,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-import com.google.firebase.database.DataSnapshot;
+ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 import com.vanniktech.emoji.EmojiTextView;
 
 import java.util.Date;
@@ -114,32 +113,41 @@ class RecipientViewHolder extends RecyclerView.ViewHolder {
         // Resolve Issue #52
         mProgressBar.setVisibility(View.VISIBLE);
 
-        Glide.with(itemView.getContext())
-                .load(getImageUrl(message))
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(
-                            Exception e,
-                            String model,
-                            Target<GlideDrawable> target,
-                            boolean isFirstResource) {
-                        mProgressBar.setVisibility(View.GONE);
-                        return false;
-                    }
+//        Glide.with(itemView.getContext())
+//                .load(getImageUrl(message))
+//                .listener(
+//                        new RequestListener<Drawable>() {
+//                            @Override
+//                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                                mProgressBar.setVisibility(View.GONE);
+//                                return false;
+//                            }
+//
+//                            @Override
+//                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                                mProgressBar.setVisibility(View.GONE);
+//                                return false;
+//                            }
+//                        }).into(mPreview);
 
-                    @Override
-                    public boolean onResourceReady(
-                            GlideDrawable resource,
-                            String model,
-                            Target<GlideDrawable> target,
-                            boolean isFromMemoryCache,
-                            boolean isFirstResource) {
-                        mProgressBar.setVisibility(View.GONE);
-                        return false;
-                    }
-                })
-                .into(mPreview);
+        Picasso.get().load(getImageUrl(message)).into(new com.squareup.picasso.Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                mPreview.setImageBitmap(bitmap);
+                mProgressBar.setVisibility(View.GONE);
 
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                mProgressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        });
 
         mPreview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,11 +159,9 @@ class RecipientViewHolder extends RecyclerView.ViewHolder {
 
     private void setFilePreview(final Message message) {
 
-        Glide.with(itemView.getContext())
-                .load(message.getText())
-                .placeholder(R.drawable.ic_placeholder_file_recipient_24dp)
-                .into(mPreview);
 
+        Picasso.get().load(message.getText()).placeholder(R.drawable.ic_placeholder_file_recipient_24dp)
+                .into(mPreview);
 
         mPreview.setOnClickListener(new View.OnClickListener() {
             @Override

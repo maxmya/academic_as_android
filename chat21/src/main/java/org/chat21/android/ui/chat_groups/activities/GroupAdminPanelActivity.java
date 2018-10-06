@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +35,7 @@ import org.chat21.android.ui.chat_groups.fragments.BottomSheetGroupAdminPanelMem
 import org.chat21.android.ui.chat_groups.listeners.OnGroupMemberClickListener;
 import org.chat21.android.ui.decorations.ItemDecoration;
 import org.chat21.android.utils.TimeUtils;
+import org.chat21.android.utils.image.CircleTransform;
 
 import static org.chat21.android.ui.ChatUI.BUNDLE_CHAT_GROUP;
 import static org.chat21.android.ui.ChatUI.BUNDLE_GROUP_ID;
@@ -134,10 +135,13 @@ public class GroupAdminPanelActivity extends AppCompatActivity implements
 //        toolbarSubTitle.setText("");
 
         // chatGroup picture
-        Glide.with(getApplicationContext())
-                .load(chatGroup.getIconURL())
-                .placeholder(R.drawable.ic_group_avatar)
-                .into(mGroupImage);
+//        Glide.with(getApplicationContext())
+//                .load(chatGroup.getIconURL())
+//                .placeholder(R.drawable.ic_group_avatar)
+//                .into(mGroupImage);
+
+        Picasso.get().load(chatGroup.getIconURL()).placeholder(R.drawable.ic_group_avatar).into(mGroupImage);
+
 
         // minimal settings
         setSupportActionBar(toolbar);

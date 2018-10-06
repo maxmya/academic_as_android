@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+ import com.squareup.picasso.Picasso;
 
 import org.chat21.android.R;
 import org.chat21.android.connectivity.AbstractNetworkReceiver;
@@ -22,7 +22,7 @@ import org.chat21.android.ui.chat_groups.activities.AddMemberToChatGroupActivity
 import org.chat21.android.ui.contacts.fragments.ContactsListFragment;
 import org.chat21.android.ui.contacts.listeners.OnContactClickListener;
 import org.chat21.android.ui.messages.activities.MessageListActivity;
-import org.chat21.android.utils.image.CropCircleTransformation;
+import org.chat21.android.utils.image.CircleTransform;
 
 import static org.chat21.android.ui.ChatUI.REQUEST_CODE_CREATE_GROUP;
 
@@ -117,11 +117,13 @@ public class ContactListActivity extends AppCompatActivity implements OnContactC
         Log.d(TAG, "ContactListActivity.initBoxCreateGroup");
 
         if (ChatUI.getInstance().areGroupsEnabled()) {
-            Glide.with(getApplicationContext())
-                    .load("")
-                    .placeholder(R.drawable.ic_group_avatar)
-                    .bitmapTransform(new CropCircleTransformation(getApplicationContext()))
-                    .into(mGroupIcon);
+//            Glide.with(getApplicationContext())
+//                    .load("")
+//                    .placeholder(R.drawable.ic_group_avatar)
+//                    .bitmapTransform(new CropCircleTransformation(getApplicationContext()))
+//                    .into(mGroupIcon);
+
+            Picasso.get().load("").placeholder(R.drawable.ic_group_avatar).transform(new CircleTransform()).into(mGroupIcon);
 
             // box click
             mBoxCreateGroup.setOnClickListener(new View.OnClickListener() {

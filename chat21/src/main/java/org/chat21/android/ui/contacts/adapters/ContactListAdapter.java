@@ -9,13 +9,13 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import org.chat21.android.R;
 import org.chat21.android.core.users.models.IChatUser;
 import org.chat21.android.ui.contacts.listeners.OnContactClickListener;
 import org.chat21.android.utils.StringUtils;
-import org.chat21.android.utils.image.CropCircleTransformation;
+import org.chat21.android.utils.image.CircleTransform;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -66,11 +66,8 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
                 contact.getFullName() : contact.getId());
         holder.mContactUsername.setText(contact.getId());
 
-        Glide.with(holder.itemView.getContext())
-                .load(contact.getProfilePictureUrl())
-                .placeholder(R.drawable.ic_person_avatar)
-                .bitmapTransform(new CropCircleTransformation(holder.itemView.getContext()))
-                .into(holder.mProfilePicture);
+        Picasso.get().load(contact.getProfilePictureUrl()).placeholder(R.drawable.ic_person_avatar)
+                .transform(new CircleTransform()).into(holder.mProfilePicture);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

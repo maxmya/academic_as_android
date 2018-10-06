@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import org.chat21.android.R;
 import org.chat21.android.core.users.models.IChatUser;
 import org.chat21.android.ui.adapters.AbstractRecyclerAdapter;
 import org.chat21.android.ui.chat_groups.listeners.OnRemoveClickListener;
-import org.chat21.android.utils.image.CropCircleTransformation;
+import org.chat21.android.utils.image.CircleTransform;
 
 /**
  * Created by stefanodp91 on 07/12/17.
@@ -81,11 +81,7 @@ public class SelectedContactListAdapter extends AbstractRecyclerAdapter<IChatUse
 
             String url = contact.getProfilePictureUrl();
 
-            Glide.with(itemView.getContext())
-                    .load(url)
-                    .placeholder(R.drawable.ic_person_avatar)
-                    .bitmapTransform(new CropCircleTransformation(itemView.getContext()))
-                    .into(profilePicture);
+            Picasso.get().load(url).placeholder(R.drawable.ic_person_avatar).transform(new CircleTransform()).into(profilePicture);
         }
 
         private void onRemoveClickListener(final int position, final OnRemoveClickListener callback) {

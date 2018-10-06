@@ -35,6 +35,12 @@ import com.graduation.academic.as.App;
 import com.graduation.academic.as.R;
 import com.squareup.picasso.Picasso;
 
+import org.chat21.android.core.ChatManager;
+import org.chat21.android.core.contacts.listeners.OnContactCreatedCallback;
+import org.chat21.android.core.exception.ChatRuntimeException;
+import org.chat21.android.core.users.models.ChatUser;
+import org.chat21.android.core.users.models.IChatUser;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,14 +72,33 @@ public class Home extends AppCompatActivity
         userName = navigationView.getHeaderView(0).findViewById(R.id.fullname);
         userPP = navigationView.getHeaderView(0).findViewById(R.id.profile);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+        final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        db.collection("users").document(uid)
                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 String fullName = (String) documentSnapshot.get("fullname");
                 String ppUrl = (String) documentSnapshot.get("ppURL");
                 userName.setText(fullName);
+                setupChatContact(uid, fullName, "", "", ppUrl);
                 Picasso.get().load(ppUrl).placeholder(R.drawable.user).into(userPP);
+            }
+        });
+    }
+
+    void setupChatContact(String uid, String fname, String email, String lname, String ppurl) {
+        IChatUser iChatUser = new ChatUser();
+        iChatUser.setEmail("");
+        iChatUser.setId(uid);
+        iChatUser.setFullName(fname);
+        // iChatUser.setFullName(currentUser.getName());
+        // iChatUser.setProfilePictureUrl(currentUser.getPpURL());
+        ChatManager.start(this, App.mChatConfiguration, iChatUser);
+        ChatManager.getInstance().setLoggedUser(iChatUser);
+        ChatManager.getInstance().createContactFor(uid, email, fname, lname, ppurl, new OnContactCreatedCallback() {
+            @Override
+            public void onContactCreatedSuccess(ChatRuntimeException exception) {
+
             }
         });
     }
@@ -125,6 +150,8 @@ public class Home extends AppCompatActivity
                     App.openActivityWithFadeAnim(LoginActivity.class, Home.this, true);
                 }
             }, 2000);
+        } else if (id == R.id.chat) {
+            App.openChat(this);
         }
 
 

@@ -41,6 +41,7 @@
                     android:textSize="20dp" />
 
                 <ImageView
+                    android:id="@+id/chat_group"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_gravity="right|center"

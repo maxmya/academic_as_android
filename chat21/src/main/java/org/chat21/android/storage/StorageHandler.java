@@ -41,7 +41,7 @@ import org.chat21.android.utils.image.ImageCompressor;
 public class StorageHandler {
     private static final String TAG = StorageHandler.class.getName();
 
-    public static void  uploadFile(Context context, File fileToUpload, final OnUploadedCallback callback) {
+    public static void uploadFile(Context context, File fileToUpload, final OnUploadedCallback callback) {
         Log.d(TAG, "uploadFile");
 
         Uri file = Uri.fromFile(fileToUpload);
@@ -124,10 +124,12 @@ public class StorageHandler {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // taskSnapshot.getMetadata() contains file metadata such as size,
                 // content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                Log.d(TAG, "addOnFailureListener.onSuccess - downloadUrl: " + downloadUrl);
-
-                callback.onUploadSuccess(uuid, downloadUrl, type);
+                taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        callback.onUploadSuccess(uuid, uri, type);
+                    }
+                });
             }
         });
     }

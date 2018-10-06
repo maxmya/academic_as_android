@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/windowBackground"
     android:layout_margin="@dimen/chat_margin_small"
+    android:background="@color/windowBackground"
     android:orientation="horizontal">
 
     <!-- profile picture -->
@@ -25,8 +25,8 @@
             android:id="@+id/fullname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/chat_row_contact_list_recipient_fullname_text_size"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textSize="@dimen/chat_row_contact_list_recipient_fullname_text_size" />
 
         <!-- username -->
         <RelativeLayout
@@ -41,27 +41,28 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="@dimen/chat_row_contact_list_recipient_last_message_text_size"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:visibility="gone" />
         </RelativeLayout>
 
         <!--&lt;!&ndash; message information &ndash;&gt;-->
         <!--<RelativeLayout-->
-            <!--android:visibility="gone"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="@dimen/chat_margin_small"-->
-            <!--android:orientation="horizontal">-->
+        <!--android:visibility="gone"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="@dimen/chat_margin_small"-->
+        <!--android:orientation="horizontal">-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/user_connectivity_status"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:ellipsize="end"-->
-                <!--android:maxLength="15"-->
-                <!--android:maxLines="1"-->
-                <!--android:text="@string/user_connectivity_status"-->
-                <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium" />-->
+        <!--<TextView-->
+        <!--android:id="@+id/user_connectivity_status"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:ellipsize="end"-->
+        <!--android:maxLength="15"-->
+        <!--android:maxLines="1"-->
+        <!--android:text="@string/user_connectivity_status"-->
+        <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium" />-->
         <!--</RelativeLayout>-->
     </LinearLayout>
 </LinearLayout>

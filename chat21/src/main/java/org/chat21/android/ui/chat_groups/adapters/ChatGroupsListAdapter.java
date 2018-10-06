@@ -8,13 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+ import com.squareup.picasso.Picasso;
 
 import org.chat21.android.R;
 import org.chat21.android.core.chat_groups.models.ChatGroup;
 import org.chat21.android.ui.adapters.AbstractRecyclerAdapter;
 import org.chat21.android.ui.chat_groups.listeners.OnGroupClickListener;
-import org.chat21.android.utils.image.CropCircleTransformation;
+import org.chat21.android.utils.image.CircleTransform;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -93,11 +93,14 @@ public class ChatGroupsListAdapter extends AbstractRecyclerAdapter<ChatGroup, Ch
 //    }
 
     private void setImage(ChatGroupsListAdapter.ViewHolder holder, String imageUrl) {
-        Glide.with(holder.itemView.getContext())
-                .load(imageUrl)
-                .placeholder(R.drawable.ic_group_avatar)
-                .bitmapTransform(new CropCircleTransformation(holder.itemView.getContext()))
-                .into(holder.image);
+//        Glide.with(holder.itemView.getContext())
+//                .load(imageUrl)
+//                .placeholder(R.drawable.ic_group_avatar)
+//                .bitmapTransform(new CropCircleTransformation(holder.itemView.getContext()))
+//                .into(holder.image);
+
+        Picasso.get().load(imageUrl).placeholder(R.drawable.ic_group_avatar).transform(new CircleTransform()).into(holder.image);
+
     }
 
     private void setMembers(ChatGroupsListAdapter.ViewHolder holder, ChatGroup chatGroup) {

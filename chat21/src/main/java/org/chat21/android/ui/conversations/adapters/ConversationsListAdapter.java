@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.daimajia.swipe.SwipeLayout;
+ import com.daimajia.swipe.SwipeLayout;
+import com.squareup.picasso.Picasso;
 import com.vanniktech.emoji.EmojiTextView;
 
 import org.chat21.android.R;
@@ -27,7 +27,7 @@ import org.chat21.android.ui.conversations.listeners.OnSwipeMenuCloseClickListen
 import org.chat21.android.ui.conversations.listeners.OnSwipeMenuUnreadClickListener;
 import org.chat21.android.utils.StringUtils;
 import org.chat21.android.utils.TimeUtils;
-import org.chat21.android.utils.image.CropCircleTransformation;
+import org.chat21.android.utils.image.CircleTransform;
 
 import java.util.List;
 
@@ -132,11 +132,12 @@ public class ConversationsListAdapter extends AbstractRecyclerAdapter<Conversati
             }
 
             // show the contact picture
-            Glide.with(holder.itemView.getContext())
-                    .load(picture)
-                    .placeholder(R.drawable.ic_person_avatar)
-                    .bitmapTransform(new CropCircleTransformation(holder.itemView.getContext()))
-                    .into(holder.recipientPicture);
+//            Glide.with(holder.itemView.getContext())
+//                    .load(picture)
+//                    .placeholder(R.drawable.ic_person_avatar)
+//                    .bitmapTransform(new CropCircleTransformation(holder.itemView.getContext()))
+//                    .into(holder.recipientPicture);
+            Picasso.get().load(picture).placeholder(R.drawable.ic_group_avatar).transform(new CircleTransform()).into(holder.recipientPicture);
         } else if (conversation.isGroupChannel()) {
 
             // retrieve the group
@@ -149,11 +150,13 @@ public class ConversationsListAdapter extends AbstractRecyclerAdapter<Conversati
                 picture = chatGroup.getIconURL();
             }
 
-            Glide.with(holder.itemView.getContext())
-                    .load(picture)
-                    .placeholder(R.drawable.ic_group_avatar)
-                    .bitmapTransform(new CropCircleTransformation(holder.itemView.getContext()))
-                    .into(holder.recipientPicture);
+//            Glide.with(holder.itemView.getContext())
+//                    .load(picture)
+//                    .placeholder(R.drawable.ic_group_avatar)
+//                    .bitmapTransform(new CropCircleTransformation(holder.itemView.getContext()))
+//                    .into(holder.recipientPicture);
+            Picasso.get().load(picture).placeholder(R.drawable.ic_group_avatar).transform(new CircleTransform()).into(holder.recipientPicture);
+
         } else {
             Toast.makeText(holder.itemView.getContext(),
                     "channel type is undefined",
@@ -293,6 +296,7 @@ public class ConversationsListAdapter extends AbstractRecyclerAdapter<Conversati
 
     /**
      * Dismiss the swipe menu for the view at position
+     *
      * @param position the position of the item to dismiss
      */
     public void dismissSwipeMenu(RecyclerView recyclerView, int position) {
@@ -300,7 +304,7 @@ public class ConversationsListAdapter extends AbstractRecyclerAdapter<Conversati
         RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
 
         // check if the viewholder is an instance of ConversationListAdapter.ViewHolder
-        if(viewHolder instanceof ViewHolder) {
+        if (viewHolder instanceof ViewHolder) {
 
             // cast the holder to ConversationListAdapter.ViewHolder
             ViewHolder holder = (ViewHolder) viewHolder;
@@ -311,7 +315,7 @@ public class ConversationsListAdapter extends AbstractRecyclerAdapter<Conversati
     }
 
     private void setTextButton(ViewHolder holder, Conversation conversation) {
-        if(conversation.getIs_new()) {
+        if (conversation.getIs_new()) {
             holder.unread.setText("Read");
         } else {
             holder.unread.setText("Unread");

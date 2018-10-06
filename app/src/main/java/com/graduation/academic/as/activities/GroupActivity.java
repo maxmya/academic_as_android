@@ -76,6 +76,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
     private LinearLayout errorLayout;
     private ImageView attachment;
     private ImageView postImage;
+    private ImageView chatGroup;
 
     // firebase
     private FirebaseFirestore db;
@@ -184,9 +185,11 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
         errorLayout = findViewById(R.id.error);
         attachment = findViewById(R.id.attach);
         postImage = findViewById(R.id.post_image);
+        chatGroup = findViewById(R.id.chat_group);
         post.setOnClickListener(this);
         floatingActionButton.setOnClickListener(this);
         attachment.setOnClickListener(this);
+        chatGroup.setOnClickListener(this);
         db.collection("users").document(uid)
                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -292,7 +295,13 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
             case R.id.attach: {
                 App.askForPermission(Manifest.permission.READ_EXTERNAL_STORAGE, App.READ_EXST, this);
                 pickFile();
+                break;
             }
+            case R.id.chat_group: {
+                //  App.openChat(GroupActivity.this, groupId, groupName);
+                Toast.makeText(this, "group chat not implemented yet", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 

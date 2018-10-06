@@ -1,6 +1,7 @@
 package org.chat21.android.ui.messages.activities;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,9 +10,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.Map;
 
@@ -147,15 +147,23 @@ public class ImageDetailsActivity extends AppCompatActivity {
 
 
         // https://github.com/MikeOrtiz/TouchImageView/issues/135
-        Glide.with(this)
-                .load(imgUrl)
-                .asBitmap()
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        mImage.setImageBitmap(resource);
-                    }
-                });
+        Picasso.get().load(imgUrl).into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                mImage.setImageBitmap(bitmap);
+
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        });
 
 //                // make the imageview zoomable
 //                // source : https://github.com/chrisbanes/PhotoView

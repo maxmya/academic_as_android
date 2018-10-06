@@ -31,23 +31,16 @@
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/loadmore"
+
+    <org.chat21.android.core.messages.handlers.MyRecyclerView
+        android:id="@+id/main_activity_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/main_activity_emoji_bar"
-        android:layout_below="@+id/appbar">
+        android:layout_below="@+id/appbar"
+        android:paddingBottom="@dimen/chat_padding_x_small"
+        android:scrollbars="vertical" />
 
-        <org.chat21.android.core.messages.handlers.MyRecyclerView
-            android:id="@+id/main_activity_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/main_activity_emoji_bar"
-            android:layout_below="@+id/appbar"
-            android:paddingBottom="@dimen/chat_padding_x_small"
-            android:scrollbars="vertical" />
-
-    </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/main_activity_emoji_bar"

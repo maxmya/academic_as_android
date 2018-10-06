@@ -108,7 +108,7 @@ public class ChatManager {
     }
 
     public void createContactFor(String uid, String email,
-                                 String firstName, String lastName,
+                                 String firstName, String lastName, String ppurl,
                                  final OnContactCreatedCallback callback) {
         final Map<String, Object> user = new HashMap<>();
         user.put("uid", uid);
@@ -116,7 +116,7 @@ public class ChatManager {
         user.put("firstname", firstName);
         user.put("lastname", lastName);
         user.put("timestamp", new Date().getTime());
-        user.put("imageurl", "");
+        user.put("imageurl", ppurl);
 
         DatabaseReference contactsNode;
         if (StringUtils.isValid(ChatManager.Configuration.firebaseUrl)) {
@@ -485,7 +485,7 @@ public class ChatManager {
         }
     }
 
-  public ArchivedConversationsHandler getArchivedConversationsHandler() {
+    public ArchivedConversationsHandler getArchivedConversationsHandler() {
         if (this.archivedConversationsHandler != null) {
             return this.archivedConversationsHandler;
         } else {

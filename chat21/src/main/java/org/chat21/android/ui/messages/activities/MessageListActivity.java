@@ -6,15 +6,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Px;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,9 +32,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.vanniktech.emoji.EmojiEditText;
 import com.vanniktech.emoji.EmojiImageView;
 import com.vanniktech.emoji.EmojiPopup;
@@ -66,14 +64,13 @@ import org.chat21.android.core.users.models.IChatUser;
 import org.chat21.android.storage.OnUploadedCallback;
 import org.chat21.android.storage.StorageHandler;
 import org.chat21.android.ui.ChatUI;
-import org.chat21.android.ui.chat_groups.activities.GroupAdminPanelActivity;
 import org.chat21.android.ui.messages.adapters.MessageListAdapter;
 import org.chat21.android.ui.messages.fragments.BottomSheetAttach;
 import org.chat21.android.ui.messages.listeners.OnMessageClickListener;
 import org.chat21.android.ui.users.activities.PublicProfileActivity;
 import org.chat21.android.utils.StringUtils;
 import org.chat21.android.utils.TimeUtils;
-import org.chat21.android.utils.image.CropCircleTransformation;
+import org.chat21.android.utils.image.CircleTransform;
 
 import java.io.File;
 import java.util.HashMap;
@@ -419,10 +416,11 @@ public class MessageListActivity extends AppCompatActivity
 
 
     private void setPicture(String pictureUrl, @DrawableRes int placeholder) {
-        Glide.with(getApplicationContext())
+
+        Picasso.get()
                 .load(StringUtils.isValid(pictureUrl) ? pictureUrl : "")
                 .placeholder(placeholder)
-                .bitmapTransform(new CropCircleTransformation(getApplicationContext()))
+                .transform(new CircleTransform())
                 .into(mPictureView);
     }
 
@@ -729,42 +727,49 @@ public class MessageListActivity extends AppCompatActivity
 
                 progressDialog.dismiss(); // bugfix Issue #45
 
-                Glide.with(getApplicationContext())
-                        .load(downloadUrl)
-                        .asBitmap()
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                                int width = bitmap.getWidth();
-                                int height = bitmap.getHeight();
+                Picasso.get().load(downloadUrl).into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        int width = bitmap.getWidth();
+                        int height = bitmap.getHeight();
 
-                                Log.d(TAG, " MessageListActivity.uploadFile:" +
-                                        " width == " + width + " - height == " + height);
+                        Log.d(TAG, " MessageListActivity.uploadFile:" +
+                                " width == " + width + " - height == " + height);
 
-                                Map<String, Object> metadata = new HashMap<>();
-                                metadata.put("width", width);
-                                metadata.put("height", height);
-                                metadata.put("src", downloadUrl.toString());
+                        Map<String, Object> metadata = new HashMap<>();
+                        metadata.put("width", width);
+                        metadata.put("height", height);
+                        metadata.put("src", downloadUrl.toString());
 //                                metadata.put("uid", uid);
-                                metadata.put("description", "");
+                        metadata.put("description", "");
 
-                                Log.d(TAG, " MessageListActivity.uploadFile:" +
-                                        " metadata == " + metadata);
+                        Log.d(TAG, " MessageListActivity.uploadFile:" +
+                                " metadata == " + metadata);
 
-                                // get the localized type
-                                String lastMessageText = "";
-                                if (type.toLowerCase().equals(StorageHandler.Type.Image.toString().toLowerCase())) {
-                                    lastMessageText = getString(R.string.activity_message_list_type_image_label);
-                                } else if (type.equals(StorageHandler.Type.File)) {
-                                    lastMessageText = getString(R.string.activity_message_list_type_file_label);
-                                }
+                        // get the localized type
+                        String lastMessageText = "";
+                        if (type.toLowerCase().equals(StorageHandler.Type.Image.toString().toLowerCase())) {
+                            lastMessageText = getString(R.string.activity_message_list_type_image_label);
+                        } else if (type.equals(StorageHandler.Type.File)) {
+                            lastMessageText = getString(R.string.activity_message_list_type_file_label);
+                        }
 
-                                // TODO: 13/02/18 add image message to the adapter  (like text message)
-                                ChatManager.getInstance().sendImageMessage(recipient.getId(),
-                                        recipient.getFullName(), lastMessageText + ": " + downloadUrl.toString(), channelType,
-                                        metadata, null);
-                            }
-                        });
+                        // TODO: 13/02/18 add image message to the adapter  (like text message)
+                        ChatManager.getInstance().sendImageMessage(recipient.getId(),
+                                recipient.getFullName(), lastMessageText + ": " + downloadUrl.toString(), channelType,
+                                metadata, null);
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                });
             }
 
             @Override

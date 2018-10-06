@@ -10,6 +10,12 @@
             android:icon="@drawable/groups_icon"
             android:title="Groups" />
 
+        <item
+            android:id="@+id/chat"
+            android:icon="@drawable/speech_bubble"
+            android:title="Chat" />
+
+
     </group>
 
     <item android:title="Account">

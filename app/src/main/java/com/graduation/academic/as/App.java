@@ -11,7 +11,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.graduation.academic.as.handlers.ExceptionHandler;
+import com.graduation.academic.as.models.User;
+
+import org.chat21.android.core.ChatManager;
+import org.chat21.android.core.users.models.ChatUser;
+import org.chat21.android.core.users.models.IChatUser;
+import org.chat21.android.ui.ChatUI;
 
 public class App extends MultiDexApplication {
 
@@ -20,6 +28,8 @@ public class App extends MultiDexApplication {
     // for singleton class and functionaries
     private static App mInstance;
     private static SharedPreferences sPrefs;
+    public static ChatManager.Configuration mChatConfiguration;
+
 
     //  keys
     public static final String PREF_KEY_LOGIN = "key_login";
@@ -69,5 +79,28 @@ public class App extends MultiDexApplication {
                 ActivityCompat.requestPermissions((Activity) mContext, new String[]{permission}, requestCode);
             }
         }
+    }
+
+    public static void initChat(Context mContext) {
+        mChatConfiguration =
+                new ChatManager.Configuration.Builder("academic_as")
+                        .firebaseUrl(mContext.getString(R.string.firebase_database_url))
+                        .build();
+    }
+
+    public static void openChat(Context mContext) {
+        initChat(mContext);
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        User currentUser = User.restore(App.sPrefs);
+        IChatUser iChatUser = new ChatUser();
+        iChatUser.setEmail(firebaseUser.getEmail());
+        iChatUser.setId(firebaseUser.getUid());
+        //  iChatUser.setFullName(currentUser.getName());
+        // iChatUser.setProfilePictureUrl(currentUser.getPpURL());
+        ChatManager.start(mContext, mChatConfiguration, iChatUser);
+        ChatManager.getInstance().setLoggedUser(iChatUser);
+        ChatUI.getInstance().setContext(mContext);
+        // ChatUI.getInstance().openChatWithGroup(chatNode, chatName);
+        ChatUI.getInstance().openConversationsListActivity();
     }
 }

@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+ import com.squareup.picasso.Picasso;
 
 import org.chat21.android.R;
 import org.chat21.android.core.ChatManager;
@@ -20,6 +20,7 @@ import org.chat21.android.core.users.models.IChatUser;
 import org.chat21.android.ui.ChatUI;
 import org.chat21.android.utils.StringUtils;
 import org.chat21.android.utils.TimeUtils;
+import org.chat21.android.utils.image.CircleTransform;
 
 import static org.chat21.android.utils.DebugConstants.DEBUG_USER_PRESENCE;
 
@@ -52,7 +53,7 @@ public class PublicProfileActivity extends AppCompatActivity implements Presence
         if (contactsSynchronizer != null) {
             IChatUser matchedContact = contactsSynchronizer.findById(contact.getId());
 
-            if(matchedContact != null) {
+            if (matchedContact != null) {
                 contact = matchedContact;
             }
         }
@@ -101,11 +102,13 @@ public class PublicProfileActivity extends AppCompatActivity implements Presence
 
         ImageView profilePictureToolbar = (ImageView) findViewById(R.id.image);
 
-        Glide.with(getApplicationContext())
-                .load(contact.getProfilePictureUrl())
-                .placeholder(R.drawable.ic_person_avatar)
-//                .bitmapTransform(new CropCircleTransformation(getApplicationContext()))
-                .into(profilePictureToolbar);
+//        Glide.with(getApplicationContext())
+//                .load(contact.getProfilePictureUrl())
+//                .placeholder(R.drawable.ic_person_avatar)
+////                .bitmapTransform(new CropCircleTransformation(getApplicationContext()))
+//                .into(profilePictureToolbar);
+        Picasso.get().load(contact.getProfilePictureUrl()).placeholder(R.drawable.ic_group_avatar).into(profilePictureToolbar);
+
     }
 
     @Override
