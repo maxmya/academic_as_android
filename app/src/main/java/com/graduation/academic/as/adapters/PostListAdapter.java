@@ -11,6 +11,7 @@ import android.media.MediaPlayer;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ceylonlabs.imageviewpopup.ImagePopup;
+import com.github.marlonlom.utilities.timeago.TimeAgo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -48,6 +50,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -79,7 +82,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
         postsListViewHolder.body.setText(posts.get(i).getBody());
         postsListViewHolder.userName.setText(posts.get(i).getOwner());
         postsListViewHolder.likes.setText(posts.get(i).getLikes());
-        postsListViewHolder.time.setText(DateFormat.getInstance().format(posts.get(i).getTimestamp()));
+        postsListViewHolder.time.setText(TimeAgo.using(posts.get(i).getTimestamp()));
         final String groupId = posts.get(i).getGroupId();
         final String postId = posts.get(i).getPostId();
         postsListViewHolder.likeUp.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +122,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
                     builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface dialog, int which) {
-
+                            App.askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, App.WRITE_EXST, postsListViewHolder.postImage.getContext());
                             final Bitmap.CompressFormat mFormat = Bitmap.CompressFormat.JPEG;
                             String name = UUID.randomUUID().toString();
                             final File myImageFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
