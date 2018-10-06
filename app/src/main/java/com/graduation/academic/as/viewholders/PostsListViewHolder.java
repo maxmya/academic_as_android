@@ -24,6 +24,8 @@ public class PostsListViewHolder extends RecyclerView.ViewHolder {
     public TextView time;
     public ReadMoreOption readMoreOption;
     public ImageView postImage;
+    public SparkButton commentUp;
+    public TextView comments;
 
     public PostsListViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -32,6 +34,8 @@ public class PostsListViewHolder extends RecyclerView.ViewHolder {
         profilePicture = itemView.findViewById(R.id.user_pp);
         likes = itemView.findViewById(R.id.likes);
         likeUp = itemView.findViewById(R.id.like_up);
+        commentUp = itemView.findViewById(R.id.comment_up);
+        comments = itemView.findViewById(R.id.comment);
         time = itemView.findViewById(R.id.time);
         postImage = itemView.findViewById(R.id.post_image_item);
         readMoreOption = new ReadMoreOption.Builder(itemView.getContext())

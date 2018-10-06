@@ -183,6 +183,20 @@ public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
             postsListViewHolder.postImage.setVisibility(View.GONE);
         }
         Picasso.get().load(posts.get(i).getPpURL()).into(postsListViewHolder.profilePicture);
+        postsListViewHolder.commentUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleComments(postsListViewHolder , groupId ,postId , i);
+            }
+
+        });
+    }
+
+    private void handleComments(final PostsListViewHolder postsListViewHolder, final String groupId, final String postId, final int i) {
+        // connect to firebase
+        //if there is a comments for this posts
+        // load them in a recycle view wiht a dialog
+
     }
 
 
