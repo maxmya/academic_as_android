@@ -75,8 +75,24 @@ public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
                 }
             }
         });
+        postsListViewHolder.commentUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                   handleComments(postsListViewHolder , groupId ,postId , i);
+            }
+
+        });
+
         Picasso.get().load(posts.get(i).getPpURL()).into(postsListViewHolder.profilePicture);
     }
+
+    private void handleComments(final PostsListViewHolder postsListViewHolder, final String groupId, final String postId, final int i) {
+        // connect to firebase
+        //if there is a comments for this posts
+        // load them in a recycle view wiht a dialog
+
+    }
+
 
     private void handleLikes(final PostsListViewHolder postsListViewHolder, final String groupId, final String postId, final int i) {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();

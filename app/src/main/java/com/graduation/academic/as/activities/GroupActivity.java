@@ -149,8 +149,6 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                     myPost.setGroupId(groupId);
                     myPost.setLikers(new HashMap<String, String>());
                     myPost.setLikes("0");
-                    myPost.setCommenters(new HashMap<String, String>());
-                    myPost.setComments("0");
                     myPost.setTimestamp(System.currentTimeMillis());
                     db.collection("/groups/" + groupId + "/posts").add(myPost)
                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
