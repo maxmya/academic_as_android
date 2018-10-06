@@ -10,3 +10,4 @@
 .externalNativeBuild
 /chat21/build
 \.idea/caches/
+/.idea/
