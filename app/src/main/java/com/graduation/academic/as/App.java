@@ -28,7 +28,7 @@ public class App extends MultiDexApplication {
 
     // for singleton class and functionaries
     private static App mInstance;
-    private static SharedPreferences sPrefs;
+    public static SharedPreferences sPrefs;
     public static ChatManager.Configuration mChatConfiguration;
 
 

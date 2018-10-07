@@ -33,6 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.graduation.academic.as.App;
 import com.graduation.academic.as.R;
+import com.graduation.academic.as.models.User;
 import com.squareup.picasso.Picasso;
 
 import org.chat21.android.core.ChatManager;
@@ -79,6 +80,10 @@ public class Home extends AppCompatActivity
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 String fullName = (String) documentSnapshot.get("fullname");
                 String ppUrl = (String) documentSnapshot.get("ppURL");
+                User myUser = new User();
+                myUser.setName(fullName);
+                myUser.setPpURL(ppUrl);
+                myUser.persist(App.sPrefs);
                 userName.setText(fullName);
                 setupChatContact(uid, fullName, "", "", ppUrl);
                 Picasso.get().load(ppUrl).placeholder(R.drawable.user).into(userPP);

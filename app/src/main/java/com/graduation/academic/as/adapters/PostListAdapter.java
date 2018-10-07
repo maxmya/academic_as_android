@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -17,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -31,11 +34,15 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.graduation.academic.as.App;
 import com.graduation.academic.as.R;
+import com.graduation.academic.as.activities.GroupActivity;
 import com.graduation.academic.as.helpers.BasicImageDownloader;
+import com.graduation.academic.as.models.Comment;
 import com.graduation.academic.as.models.Post;
+import com.graduation.academic.as.models.User;
 import com.graduation.academic.as.viewholders.GroupListViewHolder;
 import com.graduation.academic.as.viewholders.PostsListViewHolder;
 import com.squareup.picasso.Picasso;
@@ -183,19 +190,77 @@ public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
             postsListViewHolder.postImage.setVisibility(View.GONE);
         }
         Picasso.get().load(posts.get(i).getPpURL()).into(postsListViewHolder.profilePicture);
+        postsListViewHolder.comments.setText(posts.get(i).getCommentCount());
+
         postsListViewHolder.commentUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                handleComments(postsListViewHolder , groupId ,postId , i);
+                postsListViewHolder.commentUp.playAnimation();
+                User myUser = User.restore(App.sPrefs);
+                handleComments(postsListViewHolder, myUser.getName(), myUser.getPpURL(), groupId, postId, i);
             }
 
         });
     }
 
-    private void handleComments(final PostsListViewHolder postsListViewHolder, final String groupId, final String postId, final int i) {
-        // connect to firebase
-        //if there is a comments for this posts
-        // load them in a recycle view wiht a dialog
+    private void loadComments(String groupId, String postId, final ArrayList<Comment> comments, final RecyclerView recyclerView) {
+        FirebaseFirestore.getInstance().collection("/groups/" + groupId + "/subdata/" + postId + "/comments/")
+                .orderBy("timestamp", Query.Direction.ASCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
+                    Comment currentComment = new Comment();
+                    currentComment.setBody((String) documentSnapshot.get("body"));
+                    currentComment.setOwner((String) documentSnapshot.get("owner"));
+                    currentComment.setPostId((String) documentSnapshot.get("postId"));
+                    currentComment.setPpUrl((String) documentSnapshot.get("ppUrl"));
+                    currentComment.setTimestamp((long) documentSnapshot.get("timestamp"));
+                    comments.add(currentComment);
+                }
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
+                recyclerView.removeAllViews();
+                recyclerView.setLayoutManager(layoutManager);
+                CommentListAdapter commentListAdapter = new CommentListAdapter(comments);
+                recyclerView.setAdapter(commentListAdapter);
+            }
+        });
+
+    }
+
+    private void handleComments(final PostsListViewHolder postsListViewHolder, final String owner, final String ppUrl, final String groupId, final String postId, final int i) {
+        LayoutInflater factory = LayoutInflater.from(postsListViewHolder.commentUp.getContext());
+        final View commentsDialog = factory.inflate(R.layout.layout_comment_dialog, null);
+        final AlertDialog deleteDialog = new AlertDialog.Builder(postsListViewHolder.commentUp.getContext()).create();
+        deleteDialog.setView(commentsDialog);
+        final RecyclerView recyclerView = commentsDialog.findViewById(R.id.comments_list);
+        final EditText commentBody = commentsDialog.findViewById(R.id.add_comment_body);
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final ArrayList<Comment> comments = new ArrayList<>();
+        loadComments(groupId, postId, comments, recyclerView);
+        commentsDialog.findViewById(R.id.add_comment_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Comment newComment = new Comment();
+                newComment.setBody(commentBody.getText().toString());
+                newComment.setOwner(owner);
+                newComment.setPpUrl(ppUrl);
+                newComment.setTimestamp(System.currentTimeMillis());
+                newComment.setPostId(postId);
+
+                db.collection("/groups/" + groupId + "/subdata/" + postId + "/comments/")
+                        .add(newComment).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        commentBody.setText("");
+                        loadComments(groupId, postId, comments, recyclerView);
+                    }
+                });
+            }
+        });
+
+        deleteDialog.show();
 
     }
 

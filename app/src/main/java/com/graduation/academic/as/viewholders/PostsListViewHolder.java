@@ -34,8 +34,8 @@ public class PostsListViewHolder extends RecyclerView.ViewHolder {
         profilePicture = itemView.findViewById(R.id.user_pp);
         likes = itemView.findViewById(R.id.likes);
         likeUp = itemView.findViewById(R.id.like_up);
-        commentUp = itemView.findViewById(R.id.comment_up);
-        comments = itemView.findViewById(R.id.comment);
+        commentUp = itemView.findViewById(R.id.comment);
+        comments = itemView.findViewById(R.id.comment_up);
         time = itemView.findViewById(R.id.time);
         postImage = itemView.findViewById(R.id.post_image_item);
         readMoreOption = new ReadMoreOption.Builder(itemView.getContext())

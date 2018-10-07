@@ -2,13 +2,14 @@ package com.graduation.academic.as.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.marlonlom.utilities.timeago.TimeAgo;
 import com.graduation.academic.as.models.Comment;
 import com.graduation.academic.as.viewholders.CommentListViewHolder;
-import com.graduation.academic.as.viewholders.GroupListViewHolder;
 import com.graduation.academic.as.R;
 import com.squareup.picasso.Picasso;
 
@@ -23,6 +24,11 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListViewHold
 
     ArrayList<Comment> comments;
 
+
+    public CommentListAdapter(ArrayList<Comment> comments) {
+        this.comments = comments;
+    }
+
     @Override
     public CommentListViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_comment, viewGroup, false);
@@ -35,11 +41,9 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListViewHold
 
         Comment c = comments.get(i);
         commentListViewHolder.body.setText(c.getBody());
-        commentListViewHolder.time.setText(DateFormat.getInstance().format(comments.get(i).getTimestamp()));
+        commentListViewHolder.time.setText(TimeAgo.using(comments.get(i).getTimestamp()));
         commentListViewHolder.userName.setText(c.getOwner());
         Picasso.get().load(comments.get(i).getPpUrl()).into(commentListViewHolder.profilePicture);
-        // Todo :attach comment to a post
-
     }
 
     @Override

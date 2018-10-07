@@ -13,8 +13,17 @@ public class Post {
     private String likes;
     private String groupId;
     private String postImage;
+    private String commentCount;
     private Map<String, String> likers;
     private long timestamp;
+
+    public void setCommentCount(String commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public String getCommentCount() {
+        return commentCount;
+    }
 
     public String getPostImage() {
         return postImage;
