@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 
 import com.graduation.academic.as.R;
+import com.vanniktech.emoji.EmojiEditText;
+import com.vanniktech.emoji.EmojiTextView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -17,7 +19,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class CommentListViewHolder extends RecyclerView.ViewHolder {
 
 
-    public TextView body;
+    public EmojiTextView body;
     public TextView userName;
     public CircleImageView profilePicture;
     public TextView time;

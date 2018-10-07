@@ -9,7 +9,11 @@
 
     </style>
 
-
+    <style name="full_screen_dialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="windowMinWidthMajor">1000000000000dp</item>
+         <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+    </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

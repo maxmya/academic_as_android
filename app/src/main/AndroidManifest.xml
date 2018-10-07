@@ -27,7 +27,8 @@
         <activity android:name=".activities.GroupsListActivity" />
         <activity android:name=".activities.GroupActivity" />
         <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.ExceptionActivity"></activity>
+        <activity android:name=".activities.ExceptionActivity" />
+        <activity android:name=".activities.CommentsActivity"></activity>
     </application>
 
 </manifest>

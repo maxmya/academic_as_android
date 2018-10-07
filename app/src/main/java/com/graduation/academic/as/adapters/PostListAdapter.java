@@ -4,33 +4,24 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ceylonlabs.imageviewpopup.ImagePopup;
 import com.github.marlonlom.utilities.timeago.TimeAgo;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,30 +29,19 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.graduation.academic.as.App;
 import com.graduation.academic.as.R;
-import com.graduation.academic.as.activities.GroupActivity;
+import com.graduation.academic.as.activities.CommentsActivity;
 import com.graduation.academic.as.helpers.BasicImageDownloader;
 import com.graduation.academic.as.models.Comment;
 import com.graduation.academic.as.models.Post;
 import com.graduation.academic.as.models.User;
-import com.graduation.academic.as.viewholders.GroupListViewHolder;
 import com.graduation.academic.as.viewholders.PostsListViewHolder;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-import com.varunest.sparkbutton.SparkEventListener;
+import com.vanniktech.emoji.EmojiEditText;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
@@ -85,8 +65,19 @@ public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final PostsListViewHolder postsListViewHolder, final int i) {
-        postsListViewHolder.readMoreOption.addReadMoreTo(postsListViewHolder.body, posts.get(i).getBody());
-        postsListViewHolder.body.setText(posts.get(i).getBody());
+        String body = posts.get(i).getBody();
+        postsListViewHolder.body.setText(body);
+        if (body.length() > 100)
+            postsListViewHolder.seeMore.setVisibility(View.VISIBLE);
+        else
+            postsListViewHolder.seeMore.setVisibility(View.GONE);
+        postsListViewHolder.seeMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                postsListViewHolder.seeMore.setText(postsListViewHolder.body.isExpanded() ? R.string.read_more : R.string.read_less);
+                postsListViewHolder.body.toggle();
+            }
+        });
         postsListViewHolder.userName.setText(posts.get(i).getOwner());
         postsListViewHolder.likes.setText(posts.get(i).getLikes());
         postsListViewHolder.time.setText(TimeAgo.using(posts.get(i).getTimestamp()));
@@ -196,73 +187,15 @@ public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
             @Override
             public void onClick(View view) {
                 postsListViewHolder.commentUp.playAnimation();
-                User myUser = User.restore(App.sPrefs);
-                handleComments(postsListViewHolder, myUser.getName(), myUser.getPpURL(), groupId, postId, i);
+                Intent commentActivity = new Intent(mContext, CommentsActivity.class);
+                commentActivity.putExtra("post_id", postId);
+                commentActivity.putExtra("group_id", groupId);
+                mContext.startActivity(commentActivity);
             }
 
         });
     }
 
-    private void loadComments(String groupId, String postId, final ArrayList<Comment> comments, final RecyclerView recyclerView) {
-        FirebaseFirestore.getInstance().collection("/groups/" + groupId + "/subdata/" + postId + "/comments/")
-                .orderBy("timestamp", Query.Direction.ASCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
-                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
-                    Comment currentComment = new Comment();
-                    currentComment.setBody((String) documentSnapshot.get("body"));
-                    currentComment.setOwner((String) documentSnapshot.get("owner"));
-                    currentComment.setPostId((String) documentSnapshot.get("postId"));
-                    currentComment.setPpUrl((String) documentSnapshot.get("ppUrl"));
-                    currentComment.setTimestamp((long) documentSnapshot.get("timestamp"));
-                    comments.add(currentComment);
-                }
-                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
-                recyclerView.removeAllViews();
-                recyclerView.setLayoutManager(layoutManager);
-                CommentListAdapter commentListAdapter = new CommentListAdapter(comments);
-                recyclerView.setAdapter(commentListAdapter);
-            }
-        });
-
-    }
-
-    private void handleComments(final PostsListViewHolder postsListViewHolder, final String owner, final String ppUrl, final String groupId, final String postId, final int i) {
-        LayoutInflater factory = LayoutInflater.from(postsListViewHolder.commentUp.getContext());
-        final View commentsDialog = factory.inflate(R.layout.layout_comment_dialog, null);
-        final AlertDialog deleteDialog = new AlertDialog.Builder(postsListViewHolder.commentUp.getContext()).create();
-        deleteDialog.setView(commentsDialog);
-        final RecyclerView recyclerView = commentsDialog.findViewById(R.id.comments_list);
-        final EditText commentBody = commentsDialog.findViewById(R.id.add_comment_body);
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final ArrayList<Comment> comments = new ArrayList<>();
-        loadComments(groupId, postId, comments, recyclerView);
-        commentsDialog.findViewById(R.id.add_comment_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Comment newComment = new Comment();
-                newComment.setBody(commentBody.getText().toString());
-                newComment.setOwner(owner);
-                newComment.setPpUrl(ppUrl);
-                newComment.setTimestamp(System.currentTimeMillis());
-                newComment.setPostId(postId);
-
-                db.collection("/groups/" + groupId + "/subdata/" + postId + "/comments/")
-                        .add(newComment).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        commentBody.setText("");
-                        loadComments(groupId, postId, comments, recyclerView);
-                    }
-                });
-            }
-        });
-
-        deleteDialog.show();
-
-    }
 
 
     private void handleLikes(final PostsListViewHolder postsListViewHolder, final String groupId, final String postId, final int i) {

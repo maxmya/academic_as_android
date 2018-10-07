@@ -12,43 +12,44 @@
         android:layout_marginTop="10dp"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/feed_item_padding_left_right"
+            android:paddingRight="@dimen/feed_item_padding_left_right">
+
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/comment_user_pp"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="@dimen/feed_item_profile_pic"
+                android:layout_height="@dimen/feed_item_profile_pic"
                 app:civ_border_color="#ffffff"
                 app:civ_border_width="1dp" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/feed_item_profile_info_padd">
 
                 <TextView
                     android:id="@+id/comment_user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="10dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="Test User"
-                    android:textSize="18dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/feed_item_profile_name"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/comment_time"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:textSize="10dp" />
+                    android:singleLine="true"
+                    android:textColor="@color/timestamp"
+                    android:textSize="@dimen/feed_item_timestamp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -57,12 +58,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <com.vanniktech.emoji.EmojiTextView
                 android:id="@+id/comment_body"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="75dp"
+                android:layout_marginRight="10dp"
                 android:fontFamily="sans-serif"
+                android:minHeight="50dp"
                 android:textAlignment="textStart"
                 android:textSize="15dp" />
 

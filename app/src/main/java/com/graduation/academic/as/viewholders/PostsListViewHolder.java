@@ -7,25 +7,25 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.devs.readmoreoption.ReadMoreOption;
 import com.graduation.academic.as.R;
 import com.varunest.sparkbutton.SparkButton;
 
+import at.blogc.android.views.ExpandableTextView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PostsListViewHolder extends RecyclerView.ViewHolder {
 
-    public TextView body;
+    public ExpandableTextView body;
 
     public TextView userName;
     public CircleImageView profilePicture;
     public TextView likes;
     public SparkButton likeUp;
     public TextView time;
-    public ReadMoreOption readMoreOption;
     public ImageView postImage;
     public SparkButton commentUp;
     public TextView comments;
+    public TextView seeMore;
 
     public PostsListViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -38,13 +38,6 @@ public class PostsListViewHolder extends RecyclerView.ViewHolder {
         comments = itemView.findViewById(R.id.comment_up);
         time = itemView.findViewById(R.id.time);
         postImage = itemView.findViewById(R.id.post_image_item);
-        readMoreOption = new ReadMoreOption.Builder(itemView.getContext())
-                .textLength(3, ReadMoreOption.TYPE_LINE)
-                .moreLabel("see more")
-                .lessLabel("see less")
-                .moreLabelColor(Color.RED)
-                .lessLabelColor(Color.BLUE)
-                .labelUnderLine(true)
-                .build();
+        seeMore = itemView.findViewById(R.id.expand_see_more);
     }
 }

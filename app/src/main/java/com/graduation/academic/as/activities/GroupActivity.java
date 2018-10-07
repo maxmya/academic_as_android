@@ -208,8 +208,11 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
         int viewId = view.getId();
         switch (viewId) {
             case R.id.post: {
+
                 if (TextUtils.isEmpty(newPost.getText().toString()) && fileUri == null)
                     return;
+
+
                 post.startLoading();
                 final Post myPost = new Post();
                 myPost.setPostId("--");
