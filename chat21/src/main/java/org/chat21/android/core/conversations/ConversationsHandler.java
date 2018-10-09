@@ -270,14 +270,14 @@ public class ConversationsHandler {
     // if the conversation exists delete it
     public void deleteConversationFromMemory(String conversationId) {
         int index = -1;
-        for(Conversation tempConversation : conversations) {
-            if(tempConversation.getConversationId().equals(conversationId)) {
+        for (Conversation tempConversation : conversations) {
+            if (tempConversation.getConversationId().equals(conversationId)) {
                 index = conversations.indexOf(tempConversation);
                 break;
             }
         }
 
-        if(index != -1) {
+        if (index != -1) {
             conversations.remove(index);
             sortConversationsInMemory();
             notifyConversationRemoved(null);

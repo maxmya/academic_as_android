@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Omar Wael on 10/5/2018.
@@ -22,10 +23,10 @@ import java.util.ArrayList;
 
 public class CommentListAdapter extends RecyclerView.Adapter<CommentListViewHolder> {
 
-    ArrayList<Comment> comments;
+    public List<Comment> comments;
 
 
-    public CommentListAdapter(ArrayList<Comment> comments) {
+    public CommentListAdapter(List<Comment> comments) {
         this.comments = comments;
     }
 
@@ -49,6 +50,11 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListViewHold
     @Override
     public int getItemCount() {
         return comments.size();
+    }
+
+    public void addItem(Comment comment) {
+        comments.add(comment);
+        notifyDataSetChanged();
     }
 
     @Override

@@ -7,10 +7,19 @@ package com.graduation.academic.as.models;
 public class Comment {
 
     private String postId;
-    private String owner ;
-    private String ppUrl ;
-    private String body ;
+    private String owner;
+    private String ppUrl;
+    private String body;
+    private String uid;
     private long timestamp;
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUid() {
+        return uid;
+    }
 
     public String getPostId() {
         return postId;

@@ -48,11 +48,25 @@
 
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/comments_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
     </FrameLayout>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/comments_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/main_activity_emoji_bar"
+        android:layout_marginTop="10dp" />
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/comment_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/main_activity_emoji_bar"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        app:indicatorColor="@color/colorAccent"
+        app:indicatorName="BallBeatIndicator" />
 
     <LinearLayout
         android:id="@+id/main_activity_emoji_bar"

@@ -212,7 +212,6 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                 if (TextUtils.isEmpty(newPost.getText().toString()) && fileUri == null)
                     return;
 
-
                 post.startLoading();
                 final Post myPost = new Post();
                 myPost.setPostId("--");

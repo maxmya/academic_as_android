@@ -1,5 +1,6 @@
 package com.graduation.academic.as.activities;
 
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Px;
 import android.support.v7.app.AppCompatActivity;
@@ -15,14 +16,20 @@ import android.widget.LinearLayout;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.graduation.academic.as.App;
 import com.graduation.academic.as.R;
 import com.graduation.academic.as.adapters.CommentListAdapter;
+import com.graduation.academic.as.adapters.PostListAdapter;
+import com.graduation.academic.as.handlers.CommentsHandler;
 import com.graduation.academic.as.models.Comment;
 import com.graduation.academic.as.models.User;
 import com.vanniktech.emoji.EmojiEditText;
@@ -37,45 +44,71 @@ import com.vanniktech.emoji.listeners.OnSoftKeyboardCloseListener;
 import com.vanniktech.emoji.listeners.OnSoftKeyboardOpenListener;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
-public class CommentsActivity extends AppCompatActivity {
+import javax.annotation.Nullable;
+
+public class CommentsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView recyclerView;
     private ArrayList<Comment> comments;
     private AVLoadingIndicatorView loadingIndicatorView;
-    private LinearLayout linearLayout;
+    private AVLoadingIndicatorView commentLoadingIndicatorView;
+
     private static final String TAG = CommentsActivity.class.getSimpleName();
     private EmojiPopup emojiPopup;
     private ImageView emojiButton;
     private EmojiEditText commentBody;
     private ViewGroup rootView;
-    private LinearLayout mEmojiBar;
+    private LinearLayoutManager layoutManager;
+    private CommentListAdapter commentListAdapter;
+    private ImageView addComment;
+    private CommentsHandler commentsHandler;
 
+    private String groupId;
+    private String postId;
+    private User myUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
+        comments = new ArrayList<>();
+        groupId = getIntent().getStringExtra("group_id");
+        postId = getIntent().getStringExtra("post_id");
+        myUser = User.restore(App.sPrefs);
+
+        initViews();
+        initRecyclerView();
+    }
+
+
+    private void initViews() {
         recyclerView = findViewById(R.id.comments_list);
         loadingIndicatorView = findViewById(R.id.loading);
-        linearLayout = findViewById(R.id.error);
         emojiButton = findViewById(R.id.main_activity_emoji);
         commentBody = findViewById(R.id.add_comment_body);
-        rootView = (ViewGroup) findViewById(R.id.main_activity_root_view);
-        mEmojiBar = (LinearLayout) findViewById(R.id.main_activity_emoji_bar);
-
-        comments = new ArrayList<>();
-        String groupId = getIntent().getStringExtra("group_id");
-        String postId = getIntent().getStringExtra("post_id");
-        User myUser = User.restore(App.sPrefs);
-        try {
-            handleComments(myUser.getName(), myUser.getPpURL(), groupId, postId);
-        } catch (Exception e) {
-            loadingIndicatorView.hide();
-            linearLayout.setVisibility(View.VISIBLE);
-        }
-
+        rootView = findViewById(R.id.main_activity_root_view);
+        addComment = findViewById(R.id.add_comment_button);
+        addComment.setOnClickListener(this);
+        commentLoadingIndicatorView = findViewById(R.id.comment_loading);
+        recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v,
+                                       int left, int top, int right, int bottom,
+                                       int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (bottom < oldBottom) {
+                    recyclerView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            layoutManager.scrollToPositionWithOffset(commentListAdapter.getItemCount() - 1, 0);
+                        }
+                    }, 50);
+                }
+            }
+        });
         setUpEmojiPopup();
         emojiButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,70 +119,54 @@ public class CommentsActivity extends AppCompatActivity {
     }
 
 
-    private void loadComments(String groupId, String postId) {
-        comments.clear();
-        FirebaseFirestore.getInstance().collection("/groups/" + groupId + "/subdata/" + postId + "/comments/")
-                .orderBy("timestamp", Query.Direction.ASCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+    private void initRecyclerView() {
+        layoutManager = new LinearLayoutManager(recyclerView.getContext());
+        recyclerView.removeAllViews();
+        recyclerView.setLayoutManager(layoutManager);
+        commentsHandler = new CommentsHandler(groupId, postId);
+        //commentListAdapter = new CommentListAdapter(commentsHandler.getComments());
+        // commentsHandler.connect();
+        comments = new ArrayList<>();
+        String collectionPath = "/groups/" + groupId + "/subdata/" + postId + "/comments";
+        commentListAdapter = new CommentListAdapter(comments);
+        FirebaseFirestore.getInstance().collection(collectionPath).orderBy("timestamp", Query.Direction.ASCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                loadingIndicatorView.hide();
+                for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
+                    switch (dc.getType()) {
+                        case ADDED: {
+                            Comment currentComment = convertSnapDocumentToComment(dc.getDocument());
 
-                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
-                    Comment currentComment = new Comment();
-                    currentComment.setBody((String) documentSnapshot.get("body"));
-                    currentComment.setOwner((String) documentSnapshot.get("owner"));
-                    currentComment.setPostId((String) documentSnapshot.get("postId"));
-                    currentComment.setPpUrl((String) documentSnapshot.get("ppUrl"));
-                    currentComment.setTimestamp((long) documentSnapshot.get("timestamp"));
-                    comments.add(currentComment);
+                            if (!comments.contains(currentComment)) {
+                                comments.add(currentComment);
+                            } else {
+                                int index = comments.indexOf(currentComment);
+                                comments.set(index, currentComment);
+                            }
+                            commentListAdapter.notifyDataSetChanged();
+                            layoutManager.scrollToPositionWithOffset(commentListAdapter.getItemCount() - 1, 0);
+                        }
+                    }
+
                 }
-                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
-                recyclerView.removeAllViews();
-                recyclerView.setLayoutManager(layoutManager);
-                CommentListAdapter commentListAdapter = new CommentListAdapter(comments);
-                recyclerView.setAdapter(commentListAdapter);
-                linearLayout.setVisibility(View.GONE);
-                loadingIndicatorView.hide();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                linearLayout.setVisibility(View.VISIBLE);
-                loadingIndicatorView.hide();
+
             }
         });
-
+        recyclerView.setAdapter(commentListAdapter);
     }
 
-    private void handleComments(final String owner, final String ppUrl, final String groupId, final String postId) {
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        loadComments(groupId, postId);
-        findViewById(R.id.add_comment_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    private Comment convertSnapDocumentToComment(DocumentSnapshot snapshot) {
+        Comment comment = new Comment();
 
-                if (TextUtils.isEmpty(commentBody.getText()))
-                    return;
-                else if (TextUtils.isEmpty(commentBody.getText().toString().trim()))
-                    return;
+        comment.setBody((String) snapshot.get("body"));
+        comment.setOwner((String) snapshot.get("owner"));
+        comment.setPostId((String) snapshot.get("postId"));
+        comment.setPpUrl((String) snapshot.get("ppUrl"));
+        comment.setTimestamp((Long) snapshot.get("timestamp"));
+        comment.setUid((String) snapshot.get("uid"));
 
-                Comment newComment = new Comment();
-                newComment.setBody(commentBody.getText().toString());
-                newComment.setOwner(owner);
-                newComment.setPpUrl(ppUrl);
-                newComment.setTimestamp(System.currentTimeMillis());
-                newComment.setPostId(postId);
-
-                db.collection("/groups/" + groupId + "/subdata/" + postId + "/comments/")
-                        .add(newComment).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        commentBody.setText("");
-                        loadComments(groupId, postId);
-                    }
-                });
-            }
-        });
-
+        return comment;
     }
 
     private void setUpEmojiPopup() {
@@ -193,4 +210,28 @@ public class CommentsActivity extends AppCompatActivity {
                 .build(commentBody);
     }
 
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.add_comment_button) {
+            String comment = commentBody.getText().toString().trim();
+            if (TextUtils.isEmpty(comment))
+                return;
+            commentLoadingIndicatorView.setVisibility(View.VISIBLE);
+            String collectionPath = "/groups/" + groupId + "/subdata/" + postId + "/comments";
+            Comment newComment = new Comment();
+            newComment.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            newComment.setTimestamp(System.currentTimeMillis());
+            newComment.setPpUrl(myUser.getPpURL());
+            newComment.setOwner(myUser.getName());
+            newComment.setPostId(postId);
+            newComment.setBody(comment);
+            commentBody.setText("");
+            FirebaseFirestore.getInstance().collection(collectionPath).add(newComment).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    commentLoadingIndicatorView.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
 }
