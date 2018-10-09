@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/main_activity_emoji_bar"
         android:layout_centerHorizontal="true"
-        android:text="some one is commenting"
+        android:text="someone is commenting"
         android:textColor="@color/grey_font"
         android:visibility="gone" />
 

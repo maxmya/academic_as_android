@@ -2,73 +2,58 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:layout_marginBottom="10dp"
     android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical">
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:orientation="horizontal">
 
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/comment_user_pp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            app:civ_border_color="#ffffff"
+            app:civ_border_width="1dp" />
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:orientation="horizontal">
+            android:background="@drawable/comments_shape"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/comment_user_pp"
-                android:layout_width="@dimen/feed_item_profile_pic"
-                android:layout_height="@dimen/feed_item_profile_pic"
-                app:civ_border_color="#ffffff"
-                app:civ_border_width="1dp" />
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/comment_user_name"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/feed_item_profile_info_padd">
-
-                <TextView
-                    android:id="@+id/comment_user_name"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/feed_item_profile_name"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/comment_time"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:textColor="@color/timestamp"
-                    android:textSize="@dimen/feed_item_timestamp" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+                android:textColor="@color/black"
+                android:textSize="@dimen/feed_item_profile_name"
+                android:textStyle="bold" />
 
             <com.vanniktech.emoji.EmojiTextView
                 android:id="@+id/comment_body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="75dp"
-                android:layout_marginRight="15dp"
                 android:fontFamily="sans-serif"
                 android:minHeight="50dp"
                 android:textAlignment="textStart"
                 android:textSize="15dp" />
 
-
+            <TextView
+                android:id="@+id/comment_time"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@color/timestamp"
+                android:textSize="@dimen/feed_item_timestamp" />
         </LinearLayout>
     </LinearLayout>
-
 
 </LinearLayout>
