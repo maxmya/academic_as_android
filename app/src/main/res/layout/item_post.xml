@@ -73,16 +73,30 @@
             android:textColor="@color/accent"
             android:visibility="gone" />
 
-
-        <ImageView
-            android:id="@+id/post_image_item"
+        <FrameLayout
+            android:id="@+id/post_image_view"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_gravity="center"
             android:paddingBottom="-20dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/err"
-            android:visibility="gone" />
+            android:visibility="gone">
+
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/image_loader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:indicatorColor="@color/colorAccent"
+                app:indicatorName="BallTrianglePathIndicator" />
+
+
+            <ImageView
+                android:id="@+id/post_image_item"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:paddingBottom="-20dp"
+                android:scaleType="centerCrop" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -124,8 +138,8 @@
                 <com.varunest.sparkbutton.SparkButton
                     android:id="@+id/comment"
                     android:layout_width="100dp"
-                    android:layout_marginTop="5dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     app:sparkbutton_activeImage="@drawable/comment"
                     app:sparkbutton_iconSize="35dp"
                     app:sparkbutton_inActiveImage="@drawable/comment"

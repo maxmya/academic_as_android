@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -36,6 +37,7 @@ import com.graduation.academic.as.models.Post;
 import com.graduation.academic.as.models.User;
 import com.graduation.academic.as.viewholders.PostsListViewHolder;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.vanniktech.emoji.EmojiEditText;
 
 import java.io.File;
@@ -97,8 +99,27 @@ public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
             }
         });
         if (posts.get(i).getPostImage() != null) {
-            postsListViewHolder.postImage.setVisibility(View.VISIBLE);
-            Picasso.get().load(posts.get(i).getPostImage()).into(postsListViewHolder.postImage);
+            postsListViewHolder.imageView.setVisibility(View.VISIBLE);
+            Target imageTarget = new Target() {
+
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    postsListViewHolder.imageLoader.setVisibility(View.VISIBLE);
+                    postsListViewHolder.postImage.setImageBitmap(bitmap);
+                }
+
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                    postsListViewHolder.imageLoader.setVisibility(View.GONE);
+                    postsListViewHolder.postImage.setImageDrawable(errorDrawable);
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+                    postsListViewHolder.imageLoader.setVisibility(View.VISIBLE);
+                }
+            };
+            Picasso.get().load(posts.get(i).getPostImage()).into(imageTarget);
             final ImagePopup imagePopup = new ImagePopup(postsListViewHolder.postImage.getContext());
             imagePopup.setBackgroundColor(Color.BLACK);
             imagePopup.setFullScreen(true);
@@ -178,7 +199,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
                 }
             });
         } else {
-            postsListViewHolder.postImage.setVisibility(View.GONE);
+            postsListViewHolder.imageView.setVisibility(View.GONE);
         }
         Picasso.get().load(posts.get(i).getPpURL()).into(postsListViewHolder.profilePicture);
         postsListViewHolder.comments.setText(posts.get(i).getCommentCount());
@@ -195,7 +216,6 @@ public class PostListAdapter extends RecyclerView.Adapter<PostsListViewHolder> {
 
         });
     }
-
 
 
     private void handleLikes(final PostsListViewHolder postsListViewHolder, final String groupId, final String postId, final int i) {

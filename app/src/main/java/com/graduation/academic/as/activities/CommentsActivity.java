@@ -7,16 +7,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -28,7 +29,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.graduation.academic.as.App;
 import com.graduation.academic.as.R;
 import com.graduation.academic.as.adapters.CommentListAdapter;
-import com.graduation.academic.as.adapters.PostListAdapter;
 import com.graduation.academic.as.handlers.CommentsHandler;
 import com.graduation.academic.as.models.Comment;
 import com.graduation.academic.as.models.User;
@@ -44,9 +44,10 @@ import com.vanniktech.emoji.listeners.OnSoftKeyboardCloseListener;
 import com.vanniktech.emoji.listeners.OnSoftKeyboardOpenListener;
 import com.wang.avi.AVLoadingIndicatorView;
 
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -71,6 +72,8 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
     private String postId;
     private User myUser;
 
+    Map<String, String> realtime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +85,7 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
 
         initViews();
         initRecyclerView();
+        commenting();
     }
 
 
@@ -208,6 +212,78 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
                     }
                 })
                 .build(commentBody);
+    }
+
+    private void commenting() {
+        String path = "/groups/" + groupId + "/subdata/" + postId + "/comments";
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference cr = db.collection(path);
+        cr.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
+                    switch (dc.getType()) {
+                        case MODIFIED: {
+                            Log.i(TAG, dc.getDocument().getId());
+                            if (dc.getDocument().getId().equals("commenters")) {
+                                realtime = (Map<String, String>) dc.getDocument().get("realtime");
+                                if (realtime != null && realtime.size() == 1)
+                                    if (realtime.containsKey(FirebaseAuth.getInstance().getCurrentUser().getUid()))
+                                        return;
+                                if (realtime != null && realtime.size() >= 1) {
+                                    findViewById(R.id.commenting).setVisibility(View.VISIBLE);
+                                } else {
+                                    findViewById(R.id.commenting).setVisibility(View.GONE);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        });
+
+        final DocumentReference dr = cr.document("commenters");
+
+        commentBody.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (realtime != null) {
+                    realtime.put(FirebaseAuth.getInstance().getCurrentUser().getUid(), "1");
+                    Map<String, Object> realtimeCommenters = new HashMap<>();
+                    realtimeCommenters.put("realtime", realtime);
+                    dr.set(realtimeCommenters);
+                } else {
+                    realtime = new HashMap<>();
+                    realtime.put(FirebaseAuth.getInstance().getCurrentUser().getUid(), "1");
+                    Map<String, Object> realtimeCommenters = new HashMap<>();
+                    realtimeCommenters.put("realtime", realtime);
+                    dr.set(realtimeCommenters);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (realtime != null) {
+                            realtime.remove(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            Map<String, Object> realtimeCommenters = new HashMap<>();
+                            realtimeCommenters.put("realtime", realtime);
+                            dr.set(realtimeCommenters);
+                        }
+                    }
+                }, 3000);
+
+            }
+        });
+
     }
 
     @Override

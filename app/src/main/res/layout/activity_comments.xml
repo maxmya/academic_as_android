@@ -58,15 +58,16 @@
         android:layout_above="@id/main_activity_emoji_bar"
         android:layout_marginTop="10dp" />
 
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/comment_loading"
+
+    <TextView
+        android:id="@+id/commenting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/main_activity_emoji_bar"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        app:indicatorColor="@color/colorAccent"
-        app:indicatorName="BallBeatIndicator" />
+        android:text="some one is commenting"
+        android:textColor="@color/grey_font"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/main_activity_emoji_bar"
@@ -112,5 +113,20 @@
 
     </LinearLayout>
 
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/comment_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/loading_holder"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:visibility="gone"
+        app:indicatorColor="@color/colorAccent"
+        app:indicatorName="BallBeatIndicator" />
 
+    <View
+        android:id="@+id/loading_holder"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true" />
 </RelativeLayout>

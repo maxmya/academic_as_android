@@ -4,11 +4,13 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.graduation.academic.as.R;
 import com.varunest.sparkbutton.SparkButton;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import at.blogc.android.views.ExpandableTextView;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -26,6 +28,8 @@ public class PostsListViewHolder extends RecyclerView.ViewHolder {
     public SparkButton commentUp;
     public TextView comments;
     public TextView seeMore;
+    public FrameLayout imageView;
+    public AVLoadingIndicatorView imageLoader;
 
     public PostsListViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -39,5 +43,7 @@ public class PostsListViewHolder extends RecyclerView.ViewHolder {
         time = itemView.findViewById(R.id.time);
         postImage = itemView.findViewById(R.id.post_image_item);
         seeMore = itemView.findViewById(R.id.expand_see_more);
+        imageView = itemView.findViewById(R.id.post_image_view);
+        imageLoader = itemView.findViewById(R.id.image_loader);
     }
 }
